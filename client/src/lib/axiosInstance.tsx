@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'https://allcode-community-project-z4em.vercel.app',
     headers: {
         'x-access-token': localStorage.getItem("token"),
     },
