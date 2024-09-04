@@ -1,9 +1,8 @@
-import { animateSlide } from "@/animations/AnimateSlide";
 import { motion } from "framer-motion";
 import { animateSlideWhenScrolling } from "@/animations/AnimateSlideWhenScrolling";
 
-function HomeAbout() {
-    
+export default function HomeOurGoals() {
+
     const animateRightProps = {
         xHidden: 100,
         xVisible: 0,
@@ -22,16 +21,15 @@ function HomeAbout() {
         <div className="flex flex-col justify-center items-center border-b border-neutral-900 py-12 md:py-24">
             <div className="flex flex-col max-w-2xl gap-12 md:gap-16">
                 <motion.h3
-                    variants={animateSlide({
-                        yHidden: -70,
-                        delay: 1.5,
-                        duration: 0.7
+                    variants={animateSlideWhenScrolling({
+                        yHidden: -100,
+                        xHidden: 0
                     })}
                     initial="hidden"
-                    animate="visible"
+                    whileInView="visible"
                     className="text-2xl mb-8 mt-12 md:mb-12 md:text-4xl"
                 >
-                    About the <span className="text-purple-400/80 font-semibold">Allcode Community Project</span>
+                    Our <span className="text-purple-400/80 font-semibold">Goals</span>
                 </motion.h3>
                 <div>
                     <motion.h4
@@ -40,7 +38,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
                     >
-                        Welcome to the Community
+                        Celebrate Creativity and Diversity
                     </motion.h4>
                     <motion.p
                         variants={animateSlideWhenScrolling(animateRightProps)}
@@ -48,7 +46,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='tracking-tight text-base md:text-xl text-neutral-300'
                     >
-                        Discover a collaborative space where creativity thrives. Build and contribute unique pages, whether you're an experienced developer or just starting. Create interactive experiences and share your innovations with our vibrant community.
+                        Our main goal is to cultivate a vibrant community where creativity thrives. We want every page to be a unique expression of its creator’s vision, reflecting the rich diversity of ideas within our community.
                     </motion.p>
                 </div>
                 <div>
@@ -58,7 +56,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
                     >
-                        Easy Contribution
+                        Foster Exploration and Engagement
                     </motion.h4>
                     <motion.p
                         variants={animateSlideWhenScrolling(animateRightProps)}
@@ -66,7 +64,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='tracking-tight text-base md:text-xl text-neutral-300'
                     >
-                        Contributing is straightforward. Submit a pull request with your changes, and our team will review it for alignment with project <a className="text-blue-400 hover:text-blue-500 hover:underline" href="/guide">guidelines</a>. We encourage adherence to our general style but welcome your personal touch.
+                        We aim to create an environment where every visit is a new adventure. Explore a variety of unique pages—from interactive games to personal showcases—that captivate and engage users.
                     </motion.p>
                 </div>
                 <div>
@@ -76,7 +74,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
                     >
-                        Showcase Your Work
+                        Promote Collaborative Growth
                     </motion.h4>
                     <motion.p
                         variants={animateSlideWhenScrolling(animateRightProps)}
@@ -84,7 +82,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='tracking-tight text-base md:text-xl text-neutral-300'
                     >
-                        Ensure your name is included at the bottom of your page for proper credit. Experienced contributors are also invited to assist with reviewing submissions to maintain the project's quality and consistency.
+                        Collaboration is essential to our success. We encourage open and supportive interactions where members can share knowledge, inspire each other, and grow together.
                     </motion.p>
                 </div>
                 <div>
@@ -94,7 +92,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
                     >
-                        Smooth Contribution Process
+                        Uphold High Quality Standards
                     </motion.h4>
                     <motion.p
                         variants={animateSlideWhenScrolling(animateRightProps)}
@@ -102,7 +100,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='tracking-tight text-base md:text-xl text-neutral-300'
                     >
-                        Prepare your page thoroughly before committing to minimize changes and streamline the process. This ensures your work is showcased effectively and efficiently.
+                        While embracing creativity, we maintain high standards of quality. We ensure that submissions meet our <a className="text-blue-400 hover:text-blue-500 hover:underline" href="/guide">guidelines</a>, allowing for personal expression while maintaining consistency.
                     </motion.p>
                 </div>
                 <div>
@@ -112,7 +110,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
                     >
-                        Join Us
+                        Encourage Continuous Innovation
                     </motion.h4>
                     <motion.p
                         variants={animateSlideWhenScrolling(animateRightProps)}
@@ -120,13 +118,29 @@ function HomeAbout() {
                         whileInView="visible"
                         className='tracking-tight text-base md:text-xl text-neutral-300'
                     >
-                        Be part of our creative community. Connect with others, share your projects, and contribute to a space where creativity and collaboration are celebrated.
+                        We are committed to inspiring ongoing innovation. Our platform evolves with new features and tools, empowering our community to push the boundaries of creativity.
+                    </motion.p>
+                </div>
+                <div>
+                    <motion.h4
+                        variants={animateSlideWhenScrolling(animateLeftProps)}
+                        initial="hidden"
+                        whileInView="visible"
+                        className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
+                    >
+                        Build a Supportive Community
+                    </motion.h4>
+                    <motion.p
+                        variants={animateSlideWhenScrolling(animateRightProps)}
+                        initial="hidden"
+                        whileInView="visible"
+                        className='tracking-tight text-base md:text-xl text-neutral-300'
+                    >
+                        We are dedicated to fostering a supportive and inclusive community where every member feels valued. By celebrating each other's successes, we ensure that everyone can thrive and enjoy their journey with us.
                     </motion.p>
                 </div>
             </div>
         </div>
 
     )
-}
-
-export default HomeAbout;   
+} 

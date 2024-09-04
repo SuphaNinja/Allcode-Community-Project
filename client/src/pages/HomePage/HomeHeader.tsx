@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 function HomeHeader() {
     return (
-        <div className="flex flex-col justify-center items-center border-b border-neutral-900 py-12 md:py-32">
+        <div className="flex flex-col justify-center items-center border-b border-neutral-900 py-32 md:py-32">
             <div className="flex flex-col justify-evenly text-center gap-12 md:gap-16">
                 <motion.h1
                     variants={animateSlide({
@@ -19,9 +19,9 @@ function HomeHeader() {
                 </motion.h1>
                 <motion.h2
                     variants={animateSlide({
-                        xHidden: 200,
-                        delay: 1,
-                        duration: 1
+                        xHidden: 0,
+                        delay: 1.5,
+                        duration: 3
                     })}
                     initial="hidden"
                     animate="visible"

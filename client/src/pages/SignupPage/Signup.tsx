@@ -2,9 +2,6 @@ import { Link } from "react-router-dom";
 import SignUpForm from "./SignupForm";
 import { Button } from "@/components/ui/button";
 
-
-
-
 export default function SignUp() {
     
     return (

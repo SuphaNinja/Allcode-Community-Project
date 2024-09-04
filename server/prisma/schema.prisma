@@ -23,7 +23,9 @@ model User {
   role                        String    @default("User")
   emailConfirmed              Boolean   @default(false)
   emailConfirmationToken      String? 
-  emailConfirmationExpiresAt  DateTime? 
+  emailConfirmationExpiresAt  DateTime?
+  resetPasswordToken          String? 
+  reserPasswordExpiresAt      DateTime? 
   createdAt                   DateTime  @default(now())
   updatedAt                   DateTime  @updatedAt
 }

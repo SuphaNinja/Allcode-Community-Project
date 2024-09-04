@@ -1,4 +1,6 @@
-export default function verifyToken  (req, res, next)  {
+import jwt from "jsonwebtoken";
+
+export default function verifyToken(req, res, next)  {
     const token = req.headers["x-access-token"];
 
     jwt.verify(token, process.env.SECRET_KEY, (error, decoded) => {

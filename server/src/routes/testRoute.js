@@ -4,6 +4,5 @@ import { test } from "../Controllers/testController.js";
 
 const testRoutes = express.Router();
 
-testRoutes.get('/test', test);
-
+testRoutes.get('/', test);
 export default testRoutes;

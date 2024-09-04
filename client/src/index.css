@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-underline {
+  text-decoration-color: #4d4c4c;
+}
+
+.scrollable-div::-webkit-scrollbar {
+    width: 8px; 
+}
+
+.scrollable-div::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollable-div::-webkit-scrollbar-thumb {
+    background: rgba(136, 136, 136, 0.7);
+}
+
+.scrollable-div::-webkit-scrollbar-thumb:hover {
+    background: rgba(85, 85, 85, 0.9);
+}

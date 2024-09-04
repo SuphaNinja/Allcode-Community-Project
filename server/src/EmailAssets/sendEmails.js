@@ -1,13 +1,14 @@
-import React from 'react'; // Ensure React is imported
+import React from 'react';
 import { Resend } from 'resend';
-import ConfirmationEmail from '../dist/EmailAssets/ConfirmationEmail.js';
+import ConfirmationEmail from '../../dist/EmailAssets/ConfirmationEmail.js';
 import ReactDOMServer from 'react-dom/server';
+import ResetPasswordEmail from '../../dist/EmailAssets/ResetPasswordEmail.js';
+
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmailConfirmation(email, firstName, lastName, userName, token) {
     const confirmationUrl = `http://localhost:5173/confirm-email/token/${token}/username/${userName}`;
-    console.log("username: ", userName)
     try {
         const emailContent = React.createElement(ConfirmationEmail, { confirmationUrl, firstName, lastName});
         const emailHtml = ReactDOMServer.renderToString(emailContent);
@@ -21,6 +22,27 @@ export async function sendEmailConfirmation(email, firstName, lastName, userName
     } catch (error) {
         console.error("Error sending email:", error);
         resend.status(500).send({error: "Error sending email."});
+        return;
+    }
+}
+
+export async function sendResetPasswordEmail(email, token) {
+    const resetUrl = `http://localhost:5173/update-password/token/${token}/email/${email}`;
+    
+    try {
+        const emailContent = React.createElement(ResetPasswordEmail, { resetUrl, email });
+        const emailHtml = ReactDOMServer.renderToString(emailContent);
+
+        await resend.emails.send({
+            from: 'info@jhc-platbyggab.com',
+            to: email,
+            subject: 'Reset Password',
+            html: emailHtml,
+        });
+
+    } catch (error) {
+        console.error("Error sending email:", error);
+        resend.status(500).send({ error: "Error sending email." });
         return;
     }
 }

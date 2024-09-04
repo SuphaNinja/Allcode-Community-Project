@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Form, FormLabel, FormField, FormControl, FormItem, FormMessage, } from "@/components/ui/form";
 import axiosInstance from '@/lib/axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const userSchema = z.object({
     firstName: z
@@ -35,6 +36,9 @@ const userSchema = z.object({
 type UserFormValues = z.infer<typeof userSchema>;
 
 export default function SignUpForm() {
+
+    const { toast } = useToast();
+
     const form = useForm<UserFormValues>({
         resolver: zodResolver(userSchema),
     });
@@ -42,12 +46,21 @@ export default function SignUpForm() {
     const navigate = useNavigate();
 
     const signUp = useMutation({
-        mutationFn: (data:UserFormValues) => axiosInstance.post("/api/users/signup", data)
+        mutationFn: (data:UserFormValues) => axiosInstance.post("/api/users/signup", data),
+        onSuccess: () => {
+            navigate("/confirm-email/token/1/username/1")
+        },
+        onError: () => {
+            toast({
+                title: "Oops",
+                description: "Something went wrong, please try again later.",
+                variant: "destructive"
+            });
+        }
     });
 
     const onSubmit = (data: UserFormValues) => {
         signUp.mutate(data)
-        console.log("userdata sent: ", data)
         navigate("/confirm-email/token/1/username/1")
     };
 

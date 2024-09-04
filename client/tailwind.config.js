@@ -1,3 +1,4 @@
+// tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -18,6 +19,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        'dark-purple': '#3D0A53',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -66,10 +68,20 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        textRotate1: {
+          '0%, 40%': { transform: 'translate3d(0, 0%, 0) rotateX(0deg)' },
+          '60%, 100%': { transform: 'translate3d(0, -100%, 0) rotateX(-90deg)' },
+        },
+        textRotate2: {
+          '0%, 40%': { transform: 'translate3d(0, 100%, 0) rotateX(-90deg)' },
+          '60%, 100%': { transform: 'translate3d(0, 0%, 0) rotateX(0deg)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        textRotate1: 'textRotate1 2.4s infinite alternate',
+        textRotate2: 'textRotate2 2.4s infinite alternate',
       },
     },
   },
