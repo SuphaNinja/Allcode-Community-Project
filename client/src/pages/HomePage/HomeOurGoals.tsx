@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { animateSlideWhenScrolling } from "@/animations/AnimateSlideWhenScrolling";
+import { Link } from "react-router-dom";
 
 export default function HomeOurGoals() {
 
@@ -100,7 +101,7 @@ export default function HomeOurGoals() {
                         whileInView="visible"
                         className='tracking-tight text-base md:text-xl text-neutral-300'
                     >
-                        While embracing creativity, we maintain high standards of quality. We ensure that submissions meet our <a className="text-blue-400 hover:text-blue-500 hover:underline" href="/guide">guidelines</a>, allowing for personal expression while maintaining consistency.
+                        While embracing creativity, we maintain high standards of quality. We ensure that submissions meet our <Link className="text-blue-400 hover:text-blue-500 hover:underline" to="/guide">guidelines</Link>, allowing for personal expression while maintaining consistency.
                     </motion.p>
                 </div>
                 <div>

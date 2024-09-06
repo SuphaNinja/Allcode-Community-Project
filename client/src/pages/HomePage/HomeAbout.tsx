@@ -1,6 +1,7 @@
 import { animateSlide } from "@/animations/AnimateSlide";
 import { motion } from "framer-motion";
 import { animateSlideWhenScrolling } from "@/animations/AnimateSlideWhenScrolling";
+import { Link } from "react-router-dom";
 
 function HomeAbout() {
     
@@ -66,7 +67,7 @@ function HomeAbout() {
                         whileInView="visible"
                         className='tracking-tight text-base md:text-xl text-neutral-300'
                     >
-                        Contributing is straightforward. Submit a pull request with your changes, and our team will review it for alignment with project <a className="text-blue-400 hover:text-blue-500 hover:underline" href="/guide">guidelines</a>. We encourage adherence to our general style but welcome your personal touch.
+                        Contributing is straightforward. Submit a pull request with your changes, and our team will review it for alignment with project <Link className="text-blue-400 hover:text-blue-500 hover:underline" to="/guide">guidelines</Link>. We encourage adherence to our general style but welcome your personal touch.
                     </motion.p>
                 </div>
                 <div>
