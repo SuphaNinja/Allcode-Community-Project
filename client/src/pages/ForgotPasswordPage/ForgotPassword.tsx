@@ -7,7 +7,8 @@ import { useMutation } from "@tanstack/react-query";
 import { Form, FormLabel, FormField, FormControl, FormItem, FormMessage } from "@/components/ui/form";
 import axiosInstance from '@/lib/axiosInstance';
 import { useState } from "react";
-
+import { Loader2, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const resetPassSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -16,7 +17,7 @@ const resetPassSchema = z.object({
 type ResetPassFormValues = z.infer<typeof resetPassSchema>;
 
 function ForgotPassword() {
-    const [ emailSent, setEmailSent ] = useState(false);
+    const [emailSent, setEmailSent] = useState(false);
 
     const form = useForm<ResetPassFormValues>({
         resolver: zodResolver(resetPassSchema),
@@ -34,40 +35,70 @@ function ForgotPassword() {
     };
 
     return (
-        <div className="absolute top-0 left-0 h-screen w-screen bg-slate-950 overflow-y-scroll">
-            {emailSent ? (
-                <div className="flex flex-col items-center justify-center min-h-screen p-6">
-                    <p className="flex flex-col items-center text-neutral-300 text-lg font-medium border rounded-xl p-6 shadow-lg">
-                        An email was sent to you with instructions to reset your password. <br /> <span>You may now close this page.</span>
+        <div className="min-h-screen flex flex-col items-center  px-4 py-12">
+            <div className="w-full max-w-md space-y-8">
+                <div className="text-center">
+                    <h2 className="mt-6 text-3xl font-bold tracking-tight">
+                        Forgot Password
+                    </h2>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Enter your email address to reset your password
                     </p>
                 </div>
-            ) : (
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="grid px-4 sm:w-1/3 mx-auto grid-cols-1 mt-36 pb-8 gap-8">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="Enter your email or username" type="text" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <div className="flex justify-end">
-                        <Button
-                            className="w-full sm:w-1/2 mx-auto py-2 px-4 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out"
-                            type="submit"
-                        >
-                            Reset password
-                        </Button>
+
+                {emailSent ? (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                        <p className="font-bold">Email Sent</p>
+                        <p className="text-sm">An email was sent to you with instructions to reset your password.</p>
+                        <p className="text-sm mt-2">You may now close this page.</p>
                     </div>
-                </form>
-            </Form>
-            )}
+                ) : (
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter your email" type="email" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button
+                                className="w-full"
+                                type="submit"
+                                disabled={resetPassword.isPending}
+                            >
+                                {resetPassword.isPending ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Sending...
+                                    </>
+                                ) : (
+                                    "Reset Password"
+                                )}
+                            </Button>
+                        </form>
+                    </Form>
+                )}
+
+                <div className="mt-4 text-center">
+                    <Button
+                        asChild
+                        variant="link"
+                        className="inline-flex items-center text-sm"
+                    >
+                        <Link to="/signin">
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Back to Login
+                        </Link>
+                    </Button>
+                </div>
+            </div>
         </div>
     );
 }

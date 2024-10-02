@@ -8,6 +8,7 @@ import { Form, FormLabel, FormField, FormControl, FormItem, FormMessage, } from 
 import axiosInstance from '@/lib/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from "lucide-react";
 
 const userSchema = z.object({
     firstName: z
@@ -21,7 +22,7 @@ const userSchema = z.object({
     userName: z
         .string()
         .min(3, "Username must be at least 3 characters long")
-        .max(25, "Username must be at most 25 characters long"),
+        .max(10, "Username must be at most 10 characters long"),
     email: z.string().email("Invalid email address"),
     password: z.string()
         .min(8, "Password must be at least 8 characters long")
@@ -36,17 +37,15 @@ const userSchema = z.object({
 type UserFormValues = z.infer<typeof userSchema>;
 
 export default function SignUpForm() {
-
     const { toast } = useToast();
+    const navigate = useNavigate();
 
     const form = useForm<UserFormValues>({
         resolver: zodResolver(userSchema),
     });
 
-    const navigate = useNavigate();
-
     const signUp = useMutation({
-        mutationFn: (data:UserFormValues) => axiosInstance.post("/api/users/signup", data),
+        mutationFn: (data: UserFormValues) => axiosInstance.post("/api/users/signup", data),
         onSuccess: () => {
             navigate("/confirm-email/token/1/username/1")
         },
@@ -61,38 +60,39 @@ export default function SignUpForm() {
 
     const onSubmit = (data: UserFormValues) => {
         signUp.mutate(data)
-        navigate("/confirm-email/token/1/username/1")
     };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 pb-8 gap-8">
-                <FormField
-                    control={form.control}
-                    name="firstName"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>First Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Jane" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Last Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Doe" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <FormField
+                        control={form.control}
+                        name="firstName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>First Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Jane" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="lastName"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Last Name</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Doe" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
                 <FormField
                     control={form.control}
                     name="userName"
@@ -149,15 +149,20 @@ export default function SignUpForm() {
                         </FormItem>
                     )}
                 />
-                <div className='col-span-1 sm:block hidden'></div>
-                <div className="flex justify-end sm:col-span-1">
-                    <Button
-                        className="sm:w-1/2 w-full py-2 px-4 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out"
-                        type="submit"
-                    >
-                        Sign Up
-                    </Button>
-                </div>
+                <Button
+                    className="w-full"
+                    type="submit"
+                    disabled={signUp.isPending}
+                >
+                    {signUp.isPending ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Signing Up...
+                        </>
+                    ) : (
+                        "Sign Up"
+                    )}
+                </Button>
             </form>
         </Form>
     );

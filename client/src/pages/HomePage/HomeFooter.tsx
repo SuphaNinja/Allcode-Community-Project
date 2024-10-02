@@ -1,105 +1,80 @@
-import { animateSlideWhenScrolling } from "@/animations/AnimateSlideWhenScrolling";
-import { iconVariants } from "@/components/NavBar";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { FaGithub } from "react-icons/fa";
+import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
-function HomeFooter() {
-  return (
-        <footer className=" text-center py-8">
-            <div className="container mx-auto px-4">
-                <div className="mb-8 flex flex-col gap-4">
-                    <motion.p
-                        variants={animateSlideWhenScrolling({
-                            yHidden: -100,
-                            xVisible: 0,
-                            duration: 1,
-                            delay: 0
-                        })}
-                        initial="hidden"
-                        whileInView="visible"
-                        className="text-neutral-300 text-md  sm:text-lg"
-                    >
-                        Welcome to the Allcode Community Project.
-                    </motion.p>
-                    <motion.p
-                        variants={animateSlideWhenScrolling({
-                            xHidden: 100,
-                            xVisible: 0,
-                            duration: 1,
-                            delay: 0
-                        })}
-                        initial="hidden"
-                        whileInView="visible"
-                      className="text-neutral-300 text-sm sm:text-lg"
-                    >
-                        Discover and contribute to a creative space where everyone can share their unique projects and ideas.
-                    </motion.p>
-                </div>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
-                    <motion.div
-                        variants={animateSlideWhenScrolling({
-                            xHidden: -100,
-                            xVisible: 0,
-                            duration: 1,
-                            delay: 0
-                        })}
-                        initial="hidden"
-                        whileInView="visible"
-                        className="flex gap-4"
-                    >
-                        <Button asChild variant="link">
-                            <a href="/signup">Sign Up</a>
-                        </Button>
-                        <Button asChild variant="link">
-                            <a href="/signin">Sign In</a>
-                        </Button>
-                    </motion.div>
-                    <motion.div
-                        variants={animateSlideWhenScrolling({
-                            xHidden: 100,
-                            xVisible: 0,
-                            duration: 1,
-                            delay: 0
-                        })}
-                        initial="hidden"
-                        whileInView="visible"
-                        className="flex gap-4"
-                    >
-                        <Button asChild variant="link">
-                            <a href="https://www.allcode.co/">
-                                Allcode Website
+function HomeBottomSection() {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.3
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.8,
+                ease: [0.6, -0.05, 0.01, 0.99]
+            }
+        }
+    };
+
+    return (
+        <section className="py-16 md:py-24 bg-gradient-to-b from-background via-background/90 to-background">
+            <motion.div
+                className="container mx-auto px-4"
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+            >
+                <Card className="bg-primary/5 border-none">
+                    <CardContent className="p-8">
+                        <motion.div className="text-center mb-12" variants={itemVariants}>
+                            <h2 className="bg-gradient-to-r font-bold from-pink-400 via-purple-500 to-indigo-500 text-xl bg-clip-text mb-4 sm:text-4xl lg:text-7xl tracking-tight text-transparent">
+                                Join Our Creative Community
+                            </h2>
+                            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                                Discover and contribute to a vibrant space where everyone can share their unique projects and ideas. Be part of something extraordinary!
+                            </p>
+                        </motion.div>
+
+                        <motion.div className="flex flex-wrap justify-center gap-4 mb-12" variants={itemVariants}>
+                            <Button asChild size="lg" variant="link">
+                                <Link to="/signup">Get Started</Link>
+                            </Button>
+                            <Button asChild variant="link" size="lg">
+                                <Link to="/signin">Sign In</Link>
+                            </Button>
+                            <Button asChild variant="link" size="lg">
+                                <a href="https://www.allcode.co/">Visit Allcode</a>
+                            </Button>
+                        </motion.div>   
+
+                        <motion.div className="flex justify-center" variants={itemVariants}>
+                            <a
+                                href="https://github.com/SuphaNinja/allcode-community-project"
+                                className="text-muted-foreground hover:text-primary transition-colors duration-300"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <FaGithub className="text-4xl" />
                             </a>
-                        </Button>
-                    </motion.div>
-                </div>
-                <motion.div
-                    variants={animateSlideWhenScrolling({
-                        xHidden: 100,
-                        xVisible: 0,
-                        duration: 1,
-                        delay: 0
-                    })}
-                    initial="hidden"
-                    whileInView="visible"
-                    className="flex justify-center"
-                >
-                    <motion.a
-                        variants={iconVariants(1)}
-                        initial="initial"
-                        animate="animate"
-                        whileHover={{ scale: 1.5 }}
-                        className=" transition-transform duration-300"
-                        href="https://github.com/SuphaNinja/allcode-community-project"
-                    >
-                        <FaGithub className="text-3xl" />
-                    </motion.a>
-                </motion.div>
-            </div>
-        </footer>
-
-
-  )
+                        </motion.div>
+                    </CardContent>
+                </Card>
+            </motion.div>
+        </section>
+    )
 }
 
-export default HomeFooter;
+export default HomeBottomSection;

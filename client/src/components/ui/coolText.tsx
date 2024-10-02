@@ -4,7 +4,7 @@ const produceSpans = (text:string, animation: any) => {
     return text.split("").map((letter, index) => (
         <span
             key={index}
-            className={`bg-gradient-to-b from-pink-600  to-purple-600 bg-clip-text text-3xl tracking-tight text-transparent inline-block transform-style-3d origin-bottom ${animation}`}
+            className={`bg-gradient-to-b  from-pink-600  to-purple-600 bg-clip-text text-3xl tracking-tight text-transparent inline-block transform-style-3d origin-bottom ${animation}`}
             style={{ animationDelay: `${index * 0.25}s` }}
         >
             {letter === " " ? "\u00A0" : letter}
@@ -40,13 +40,13 @@ const Position = ({ text1, text2, to}: PositionProps) => {
                 {to ? (
                     <Link
                         to={to}
-                        className="absolute hover:underline custom-underline left-1/2 transform -translate-x-1/2 top-[25%] sm:top-[22%] md:top-[18%] lg:top-[15%] 2xl:top-[10%] flex justify-center"
+                        className="absolute hover:cursor-pointer hover:underline custom-underline left-1/2 transform -translate-x-1/2 top-[25%] sm:top-[22%] md:top-[18%] lg:top-[15%] 2xl:top-[10%] flex justify-center"
                     >
                         {produceSpans(text2, "animate-textRotate2")}
                     </Link>
                 ) : (
                     <div
-                        className="absolute left-1/2 transform -translate-x-1/2 top-[25%] sm:top-[22%] md:top-[18%] lg:top-[15%] 2xl:top-[10%] flex justify-center"
+                            className="absolute hover:cursor-pointer left-1/2 transform -translate-x-1/2 top-[25%] sm:top-[22%] md:top-[18%] lg:top-[15%] 2xl:top-[10%] flex justify-center"
                     >
                         {produceSpans(text2, "animate-textRotate2")}
                     </div>

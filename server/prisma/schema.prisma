@@ -20,12 +20,60 @@ model User {
   userName                    String    @unique
   email                       String    @unique
   password                    String
+  profileImage                String? 
   role                        String    @default("User")
   emailConfirmed              Boolean   @default(false)
-  emailConfirmationToken      String? 
+  emailConfirmationToken      String?
   emailConfirmationExpiresAt  DateTime?
-  resetPasswordToken          String? 
-  reserPasswordExpiresAt      DateTime? 
+  resetPasswordToken          String?
+  resetPasswordExpiresAt      DateTime?
   createdAt                   DateTime  @default(now())
   updatedAt                   DateTime  @updatedAt
+
+  // Friend relationships
+  friendshipsInitiated Friendship[] @relation("UserFriends")
+  friendshipsReceived  Friendship[] @relation("FriendUser")
+  messagesSent         Message[]    @relation("SentMessages")
+  messagesReceived     Message[]    @relation("ReceivedMessages")
+  notificationsSent    Notification[] @relation("SentNotifications")
+  notificationsReceived Notification[] @relation("ReceivedNotifications")
+}
+
+model Friendship {
+  id            String   @id @default(cuid())
+  userId        String
+  friendId      String
+  createdAt     DateTime @default(now())
+  isCloseFriend Boolean  @default(false)
+
+  user   User @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendUser", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  content     String
+  senderId    String
+  receiverId  String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sender   User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id          String   @id @default(cuid())
+  type        String   // e.g., "NEW_FRIEND", "NEW_MESSAGE", etc.
+  content     String
+  senderId    String
+  receiverId  String
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  sender   User @relation("SentNotifications", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedNotifications", fields: [receiverId], references: [id], onDelete: Cascade)
 }

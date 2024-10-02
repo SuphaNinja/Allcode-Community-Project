@@ -76,7 +76,7 @@ function UpdatePassword() {
 
     return (
         <div>
-            <div className={`absolute top-0 left-0 h-screen w-screen bg-slate-950 overflow-y-scroll`}>
+            <div className={`absolute top-24 left-0 h-screen  bg-slate-950 overflow-y-scroll`}>
                 <motion.div
                     initial={{ x: '-100vw' }}
                     animate={isTransitioning ? { x: 0 } : {}}

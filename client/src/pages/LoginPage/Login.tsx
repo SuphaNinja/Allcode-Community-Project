@@ -12,16 +12,17 @@ import { useToast } from '@/hooks/use-toast';
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ModifiedNavBar from "@/components/ModifiedNavbar";
+import { Loader2 } from "lucide-react";
 
 const loginSchema = z.object({
-    email: z.string().min(4, "Invalid email or usename"),
+    email: z.string().min(4, "Invalid email or username"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login({ currentUser }: any) {
-    const [ isTransitioning, setIsTransitioning ] = useState(false);
+    const [isTransitioning, setIsTransitioning] = useState(false);
     const navigate = useNavigate();
     const { toast } = useToast();
 
@@ -40,7 +41,7 @@ export default function Login({ currentUser }: any) {
                     description: <p className="text-white">You've been logged in successfully.</p>,
                     duration: 1500,
                 });
-                
+
                 setIsTransitioning(true);
                 setTimeout(() => {
                     navigate("/");
@@ -52,30 +53,22 @@ export default function Login({ currentUser }: any) {
 
     const onSubmit = (data: LoginFormValues) => {
         login.mutate(data);
-        console.log("logindata", data)
     };
 
     return (
-        <div> 
-            <div className={`absolute top-0 left-0 h-screen w-screen bg-slate-950 overflow-y-scroll`}>
-                <motion.div
-                    initial={{ x: '-100vw' }}
-                    animate={isTransitioning ? { x: 0 } : {}}
-                    transition={{ duration: 1.5 }}
-                    className={`overflow-x-hidden text-neutral-300 antialiased selection:bg-cyan-300 selection:text-cyan-900 bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] min-h-screen ${isTransitioning ? "" : "hidden"}`}
-                >
-                    <div className='container mx-auto px-8'>
-                        <ModifiedNavBar />
-                    </div>
-                </motion.div>
-                <div className="text-center border-b mt-24 mb-2 border-slate-900 w-1/2 mx-auto pb-2">
-                    Not signed up yet?
-                    <Button asChild variant={"link"}>
-                        <Link to="/signup">Sign Up</Link>
-                    </Button>
+        <div className="min-h-screen flex flex-col items-center px-4 py-12">
+            <div className="w-full max-w-md space-y-8">
+                <div className="text-center">
+                    <h2 className="mt-6 text-3xl font-bold tracking-tight">
+                        Sign In
+                    </h2>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Enter your credentials to access your account
+                    </p>
                 </div>
+
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="grid px-4 sm:w-1/2 mx-auto grid-cols-1 pb-8 gap-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
                             control={form.control}
                             name="email"
@@ -102,22 +95,46 @@ export default function Login({ currentUser }: any) {
                                 </FormItem>
                             )}
                         />
-                        <div className="flex justify-end">
-                            <Button
-                                className="w-full sm:w-1/2 mx-auto py-2 px-4 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out"
-                                type="submit"
-                            >
-                                Login
-                            </Button>
-                        </div>
+                        <Button
+                            className="w-full"
+                            type="submit"
+                            disabled={login.isPending}
+                        >
+                            {login.isPending ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Signing In...
+                                </>
+                            ) : (
+                                "Sign In"
+                            )}
+                        </Button>
                     </form>
                 </Form>
-                <div className="w-full flex justify-center">
-                    <Button asChild variant={"link"}>
-                        <Link to="/forgot-password" className="mx-auto">Forgot your password?</Link>
+
+                <div className="text-center space-y-2">
+                    <Button asChild variant="link">
+                        <Link to="/forgot-password">Forgot your password?</Link>
                     </Button>
+                    <div>
+                        <span className="text-muted-foreground">Don't have an account? </span>
+                        <Button asChild variant="link">
+                            <Link to="/signup">Sign Up</Link>
+                        </Button>
+                    </div>
                 </div>
             </div>
+
+            {isTransitioning && (
+                <motion.div
+                    initial={{ x: '-100vw' }}
+                    animate={{ x: 0 }}
+                    transition={{ duration: 1.5 }}
+                    className="fixed inset-0 bg-background z-50 flex items-center justify-center"
+                >
+                    <ModifiedNavBar />
+                </motion.div>
+            )}
         </div>
     );
 }

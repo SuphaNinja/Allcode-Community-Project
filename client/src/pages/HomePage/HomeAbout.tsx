@@ -1,133 +1,104 @@
-import { animateSlide } from "@/animations/AnimateSlide";
 import { motion } from "framer-motion";
-import { animateSlideWhenScrolling } from "@/animations/AnimateSlideWhenScrolling";
 import { Link } from "react-router-dom";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 function HomeAbout() {
-    
-    const animateRightProps = {
-        xHidden: 100,
-        xVisible: 0,
-        duration: 1,
-        delay: 0
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2,
+                delayChildren: 0.3
+            }
+        }
     };
 
-    const animateLeftProps = {
-        xHidden: -100,
-        xVisible: 0,
-        duration: 1,
-        delay: 0
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 1.5,
+                ease: [0.6, -0.05, 0.01, 0.99]
+            }
+        }
     };
 
     return (
-        <div className="flex flex-col justify-center items-center border-b border-neutral-900 py-12 md:py-24">
-            <div className="flex flex-col max-w-2xl gap-12 md:gap-16">
-                <motion.h3
-                    variants={animateSlide({
-                        yHidden: -70,
-                        delay: 1.5,
-                        duration: 0.7
-                    })}
-                    initial="hidden"
-                    animate="visible"
-                    className="text-2xl mb-8 mt-12 md:mb-12 md:text-4xl"
+        <motion.div
+            id="about"
+            className="flex flex-col justify-center items-center border-b border-neutral-900 py-16 md:py-24 px-4 md:px-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+        >
+            <div className="flex flex-col max-w-4xl gap-8 md:gap-12">
+                <motion.h2
+                    variants={itemVariants}
+                    className="text-3xl md:text-5xl font-bold text-center mb-8"
                 >
-                    About the <span className="text-purple-400/80 font-semibold">Allcode Community Project</span>
-                </motion.h3>
-                <div>
-                    <motion.h4
-                        variants={animateSlideWhenScrolling(animateLeftProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
-                    >
-                        Welcome to the Community
-                    </motion.h4>
-                    <motion.p
-                        variants={animateSlideWhenScrolling(animateRightProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='tracking-tight text-base md:text-xl text-neutral-300'
-                    >
-                        Discover a collaborative space where creativity thrives. Build and contribute unique pages, whether you're an experienced developer or just starting. Create interactive experiences and share your innovations with our vibrant community.
-                    </motion.p>
-                </div>
-                <div>
-                    <motion.h4
-                        variants={animateSlideWhenScrolling(animateLeftProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
-                    >
-                        Easy Contribution
-                    </motion.h4>
-                    <motion.p
-                        variants={animateSlideWhenScrolling(animateRightProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='tracking-tight text-base md:text-xl text-neutral-300'
-                    >
-                        Contributing is straightforward. Submit a pull request with your changes, and our team will review it for alignment with project <Link className="text-blue-400 hover:text-blue-500 hover:underline" to="/guide">guidelines</Link>. We encourage adherence to our general style but welcome your personal touch.
-                    </motion.p>
-                </div>
-                <div>
-                    <motion.h4
-                        variants={animateSlideWhenScrolling(animateLeftProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
-                    >
-                        Showcase Your Work
-                    </motion.h4>
-                    <motion.p
-                        variants={animateSlideWhenScrolling(animateRightProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='tracking-tight text-base md:text-xl text-neutral-300'
-                    >
-                        Ensure your name is included at the bottom of your page for proper credit. Experienced contributors are also invited to assist with reviewing submissions to maintain the project's quality and consistency.
-                    </motion.p>
-                </div>
-                <div>
-                    <motion.h4
-                        variants={animateSlideWhenScrolling(animateLeftProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
-                    >
-                        Smooth Contribution Process
-                    </motion.h4>
-                    <motion.p
-                        variants={animateSlideWhenScrolling(animateRightProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='tracking-tight text-base md:text-xl text-neutral-300'
-                    >
-                        Prepare your page thoroughly before committing to minimize changes and streamline the process. This ensures your work is showcased effectively and efficiently.
-                    </motion.p>
-                </div>
-                <div>
-                    <motion.h4
-                        variants={animateSlideWhenScrolling(animateLeftProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='text-xl md:text-2xl text-neutral-300 pb-4 mb-2 border-b border-slate-900'
-                    >
-                        Join Us
-                    </motion.h4>
-                    <motion.p
-                        variants={animateSlideWhenScrolling(animateRightProps)}
-                        initial="hidden"
-                        whileInView="visible"
-                        className='tracking-tight text-base md:text-xl text-neutral-300'
-                    >
-                        Be part of our creative community. Connect with others, share your projects, and contribute to a space where creativity and collaboration are celebrated.
-                    </motion.p>
-                </div>
+                    About the <span className="text-purple-400 font-semibold">Allcode Community Project</span>
+                </motion.h2>
+                <motion.div variants={itemVariants} className="grid gap-6 md:grid-cols-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Welcome to the Community</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">
+                                Discover a collaborative space where creativity thrives. Build and contribute unique pages, whether you're an experienced developer or just starting. Create interactive experiences and share your innovations with our vibrant community.
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Easy Contribution</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">
+                                Contributing is straightforward. Submit a pull request with your changes, and our team will review it for alignment with project <Link className="text-primary hover:underline" to="/guide">guidelines</Link>. We encourage adherence to our general style but welcome your personal touch.
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Showcase Your Work</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">
+                                Ensure your name is included at the bottom of your page for proper credit. Experienced contributors are also invited to assist with reviewing submissions to maintain the project's quality and consistency.
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Smooth Contribution Process</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">
+                                Prepare your page thoroughly before committing to minimize changes and streamline the process. This ensures your work is showcased effectively and efficiently.
+                            </p>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+                <motion.div variants={itemVariants} className="mt-8">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Join Us</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">
+                                Be part of our creative community. Connect with others, share your projects, and contribute to a space where creativity and collaboration are celebrated.
+                            </p>
+                        </CardContent>
+                    </Card>
+                </motion.div>
             </div>
-        </div>
-
+        </motion.div>
     )
 }
 
-export default HomeAbout;   
+export default HomeAbout;

@@ -1,22 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
+import { useNavigate, Link } from "react-router-dom";
 import { Input } from "./ui/input";
 import { useEffect, useRef, useState } from "react";
 import { ListOfPages } from "@/lib/ListOfPages";
-import { FaSearch } from 'react-icons/fa';
-import "../index.css"
+import { Search, Book } from "lucide-react";
 
 export default function SearchBar() {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredPages, setFilteredPages] = useState(ListOfPages);
     const [showResults, setShowResults] = useState(false);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const navigate = useNavigate();
     const searchRef = useRef<HTMLDivElement>(null);
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        setShowResults(true);
-    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const query = e.target.value;
@@ -48,46 +42,60 @@ export default function SearchBar() {
     }, []);
 
     return (
-        <div ref={searchRef} className="relative sm:mt-0 mt-8">
-            <form onSubmit={handleSearch} className="flex flex-col items-center">
-                <div className="flex items-center">
-                    <Input
-                        placeholder="Search pages..."
-                        type="text"
-                        value={searchQuery}
-                        onChange={handleInputChange}
-                        className="px-4 py-2 sm:border-none rounded-md shadow-sm focus:border focus:ring-2 focus:ring-fuchsia-400 transition duration-300 ease-in"
-                    />
-                    <Button type="submit" className="sm:block hidden">
-                        <FaSearch className="text-xl text-neutral-400"/>
-                    </Button>
-                </div>
-                {showResults && (
-                    <div className="absolute top-full mt-2 w-full border border-neutral-500 p-2 bg-slate-900/10 shadow-lg">
-                        {filteredPages.length > 0 ? (
-                            <ul className="max-h-36 overflow-y-auto scrollable-div">
-                                {filteredPages.map((page) => (
-                                    <li key={page.path} className="p-2 hover:underline text-sm sm:text-base border-b border-neutral-700 hover:bg-slate-900/50">
-                                        <Link
-                                            to={page.path}
-                                            className="block text-blue-500"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                navigate(page.path);
-                                                setShowResults(false);
-                                            }}
+        <div ref={searchRef} className="relative mx-auto w-full max-w-sm">
+            <div className="relative">
+                <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                    type="text"
+                    placeholder="Search pages..."
+                    value={searchQuery}
+                    onChange={handleInputChange}
+                    className="pl-8 pr-10 bg-background/50 border border-neutral-700 rounded-full focus:bg-background transition-colors"
+                />
+                <Link
+                    to="/findpages"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-neutral-700 transition-colors"
+                    title="View all pages"
+                >
+                    <Book className="h-4 w-4 text-muted-foreground" />
+                </Link>
+            </div>
+            {showResults && (
+                <div className="absolute z-10 w-full mt-1 bg-slate-800/95 rounded-b-2xl shadow-lg">
+                    {filteredPages.length > 0 ? (
+                        <ul className="max-h-60 min-h-32 overflow-auto py-1" role="listbox">
+                            {filteredPages.map((page, index) => (
+                                <li
+                                    key={page.path}
+                                    className="relative px-4 py-2 rounded-2xl hover:bg-slate-400/80 cursor-pointer text-sm"
+                                    onClick={() => {
+                                        navigate(page.path);
+                                        setShowResults(false);
+                                        setSearchQuery('');
+                                    }}
+                                    onMouseEnter={() => setHoveredIndex(index)}
+                                    onMouseLeave={() => setHoveredIndex(null)}
+                                    role="option"
+                                    aria-selected={hoveredIndex === index}
+                                >
+                                    {page.name}
+                                    {hoveredIndex === index && page.shortDescription && (
+                                        <div
+                                            className="absolute left-0 z-20 p-2 mt-1 text-sm bg-slate-700 text-white rounded-xl shadow-lg max-w-xs ml-2"
+                                            style={{ top: '50%', transform: 'translateY(50%)' }}
+                                            role="tooltip"
                                         >
-                                            {page.name}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="p-2 text-gray-500">No results found</p>
-                        )}
-                    </div>
-                )}
-            </form>
+                                            {page.shortDescription}
+                                        </div>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="p-2 text-sm text-muted-foreground">No results found</p>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

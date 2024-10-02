@@ -24,6 +24,7 @@ export async function confirmEmail(req, res) {
             where: { id: user.id },
             data: {
                 emailConfirmed: true,
+                emailConfirmationToken: null
             },
         });
 
