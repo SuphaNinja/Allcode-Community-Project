@@ -6,8 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Search, UserPlus, UserMinus, MessageCircle, Star } from "lucide-react"
-import { toast, useToast } from '@/hooks/use-toast'
+import { Search, UserPlus, MessageCircle, Star } from "lucide-react"
+import { useToast } from '@/hooks/use-toast'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"

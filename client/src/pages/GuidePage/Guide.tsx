@@ -6,13 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 function Guide() {
-    const animateRightProps = {
-        xHidden: 100,
-        xVisible: 0,
-        duration: 0.5,
-        delay: 0
-    };
-
     const animateLeftProps = {
         xHidden: -100,
         xVisible: 0,
