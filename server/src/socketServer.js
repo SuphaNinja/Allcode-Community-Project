@@ -34,7 +34,7 @@ export function initializeSocketServer(app) {
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit("new_message", message);
             }
-            // Also emit the message back to the sender
+            
             socket.emit("new_message", message);
         });
     });

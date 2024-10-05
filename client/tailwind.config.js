@@ -76,12 +76,17 @@ module.exports = {
           '0%, 40%': { transform: 'translate3d(0, 100%, 0) rotateX(-90deg)' },
           '60%, 100%': { transform: 'translate3d(0, 0%, 0) rotateX(0deg)' },
         },
+        shimmer: {
+          '0%': { backgroundPosition: '0% 0%' },
+          '100%': { backgroundPosition: '-200% 0%' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         textRotate1: 'textRotate1 2.4s infinite alternate',
         textRotate2: 'textRotate2 2.4s infinite alternate',
+        shimmer: 'shimmer 2s linear infinite',
       },
     },
   },

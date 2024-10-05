@@ -71,6 +71,7 @@ model Notification {
   content     String
   senderId    String
   receiverId  String
+  linkUrl     String   @default("/profile")
   read        Boolean  @default(false)
   createdAt   DateTime @default(now())
 

@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Send, Check, Star, UserMinus } from "lucide-react"
+import { Send, Check, Star, UserMinus, ChevronUp } from "lucide-react"
 import { useToast } from '@/hooks/use-toast'
 import socket from '@/lib/socket'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -20,6 +20,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Link } from 'react-router-dom'
 
 type User = {
     id: string
@@ -52,12 +53,15 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
     const { toast } = useToast()
     const queryClient = useQueryClient()
     const lastMessageRef = useRef<HTMLDivElement>(null)
-    const [isCloseFriend, setIsCloseFriend] = useState(friend.isCloseFriend)
-
-    const { data: initialMessages, isLoading, } = useQuery({
-        queryKey: ['messages', friend.id],
-        queryFn: () => axiosInstance.post('/api/users/get-messages', { friendId: friend.id }),
-    });
+    const [isCloseFriend, setIsCloseFriend] = useState(friend.isCloseFriend);
+    const [pageNumber, setPageNumber] = useState(1)
+    const scrollAreaRef = useRef<HTMLDivElement>(null)
+    const [isScrollLocked, setIsScrollLocked] = useState(false)
+    
+    const { data: initialMessages, isLoading } = useQuery({
+        queryKey: ['messages', friend.id, pageNumber],
+        queryFn: () => axiosInstance.post('/api/users/get-messages', { friendId: friend.id, pageNumber }),
+    })
 
     const markMessagesAsRead = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post('/api/users/read-message', { friendId }),
@@ -122,7 +126,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
 
     useEffect(() => {
         if (initialMessages?.data?.success) {
-            setMessages(initialMessages.data.success)
+            setMessages(initialMessages.data.success.messages)
             markMessagesAsRead.mutate(friend.id)
         }
     }, [initialMessages, friend.id])
@@ -143,8 +147,18 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
         }
     }, [currentUser.id, friend.id]);
 
+    const handleLoadMore = () => {
+        setIsScrollLocked(true)
+        setPageNumber(prevPageNumber => prevPageNumber + 1)
+        setTimeout(() => {
+            setIsScrollLocked(false)
+        }, 1000)
+    }
+
     useEffect(() => {
-        lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' })
+        if (!isScrollLocked) {
+            lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' })
+        }
     }, [messages])
 
     const sendMessage = useMutation({
@@ -169,16 +183,13 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
             sendMessage.mutate(newMessage)
             socket.emit("send_message", newMessage)
         }
-    }
-
-    
-   
+    };
 
     return (
         <div className="flex flex-col h-full rounded-lg shadow-xl overflow-hidden sm:border border-gray-700">
             <div className="sm:p-4 p-2 border-b border-gray-700">
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center">
+                    <Link to={`/profile/${friend.id}`} className="flex hover:brightness-125 items-center">
                         <Avatar className="h-12 w-12 border-2 border-primary">
                             <AvatarImage src={friend.profileImage} alt={friend.firstName} />
                             <AvatarFallback className="bg-primary text-primary-foreground">{friend.firstName[0]}</AvatarFallback>
@@ -187,7 +198,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                             <div className="font-semibold text-lg text-primary">{`${friend.firstName} ${friend.lastName}`}</div>
                             <div className="text-sm text-gray-400">{friend.email}</div>
                         </div>
-                    </div>
+                    </Link>
                     <div className="flex items-center space-x-2">
                         <button
                             onClick={handleToggleCloseFriend}
@@ -222,48 +233,66 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                     </div>
                 </div>
             </div>
-            <ScrollArea className="h-full p-4" >
-                {isLoading ? (
+            <ScrollArea className="h-full p-4" ref={scrollAreaRef}>
+                {isLoading && pageNumber === 1 ? (
                     <div className="flex items-center justify-center h-full">
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
                     </div>
                 ) : (
-                    <AnimatePresence>
-                        {messages.map((message: Message, index) => (
-                            <motion.div
-                                key={message.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.5  }}
-                                className={`mb-4 flex ${message.senderId === friend.id ? 'justify-start' : 'justify-end'}`}
-                                ref={index === messages.length - 1 ? lastMessageRef : null}
-                            >
-                                <div className={`flex items-end ${message.senderId === friend.id ? 'flex-row' : 'flex-row-reverse'} sm:max-w-[50%]`}>
-                                    <Avatar className="h-8 w-8 mb-2 mx-2">
-                                        <AvatarImage src={message.senderId === friend.id ? friend.profileImage : currentUser.profileImage} alt={message.senderId === friend.id ? friend.firstName : currentUser.firstName} />
-                                        <AvatarFallback>{message.senderId === friend.id ? friend.firstName[0] : currentUser.firstName[0]}</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-col max-w-sm">
-                                        <div
-                                            className={`p-3 rounded-lg ${message.senderId === friend.id
-                                                ? 'bg-accent text-accent-foreground'
-                                                : 'bg-primary text-primary-foreground'
-                                                } shadow-md break-words`}
-                                        >
-                                            {message.content}
-                                        </div>
-                                        <div className="text-xs text-gray-500 mt-1 flex items-center">
-                                            {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
-                                            {message.senderId !== friend.id && message.read && (
-                                                <Check className="h-3 w-3 text-green-500 ml-1" />
-                                            )}
+                    <>
+                        {initialMessages?.data.success.hasMore && (
+                            <div className="flex justify-center mb-4">
+                                <Button
+                                    onClick={handleLoadMore}
+                                    className="flex items-center"
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? (
+                                        <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary mr-2"></div>
+                                    ) : (
+                                        <ChevronUp className="h-4 w-4 mr-2" />
+                                    )}
+                                    Load More
+                                </Button>
+                            </div>
+                        )}
+                        <AnimatePresence>
+                            {messages.map((message: Message, index) => (
+                                <motion.div
+                                    key={message.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ duration: 0.5 }}
+                                    className={`mb-4 flex ${message.senderId === friend.id ? 'justify-start' : 'justify-end'}`}
+                                    ref={index === messages.length - 1 ? lastMessageRef : null}
+                                >
+                                    <div className={`flex items-end ${message.senderId === friend.id ? 'flex-row' : 'flex-row-reverse'} sm:max-w-[50%]`}>
+                                        <Avatar className="h-8 w-8 mb-2 mx-2">
+                                            <AvatarImage src={message.senderId === friend.id ? friend.profileImage : currentUser.profileImage} alt={message.senderId === friend.id ? friend.firstName : currentUser.firstName} />
+                                            <AvatarFallback>{message.senderId === friend.id ? friend.firstName[0] : currentUser.firstName[0]}</AvatarFallback>
+                                        </Avatar>
+                                        <div className="flex flex-col max-w-sm">
+                                            <div
+                                                className={`p-3 rounded-lg ${message.senderId === friend.id
+                                                    ? 'bg-accent text-accent-foreground'
+                                                    : 'bg-primary text-primary-foreground'
+                                                    } shadow-md break-words`}
+                                            >
+                                                {message.content}
+                                            </div>
+                                            <div className="text-xs text-gray-500 mt-1 flex items-center">
+                                                {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+                                                {message.senderId !== friend.id && message.read && (
+                                                    <Check className="h-3 w-3 text-green-500 ml-1" />
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </>
                 )}
             </ScrollArea>
             <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-700">

@@ -1,10 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
+    const location = useLocation();
+    
+    if (location.pathname === '/livechat') {
+        return null;
+    }
 
     return (
         <footer className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-border/40">

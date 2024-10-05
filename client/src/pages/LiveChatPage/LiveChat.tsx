@@ -20,7 +20,7 @@ export default function LiveChat({ currentUser }: any) {
 
     const handleFriendSelect = (friend: Friend) => {
         setSelectedFriend(friend)
-        setIsMobileMenuOpen(false) // Close mobile menu when a friend is selected
+        setIsMobileMenuOpen(false) 
     }
 
     return (

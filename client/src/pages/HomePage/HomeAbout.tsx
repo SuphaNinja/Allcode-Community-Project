@@ -8,7 +8,7 @@ function HomeAbout() {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.2,
+                staggerChildren: 0.5,
                 delayChildren: 0.3
             }
         }
@@ -29,7 +29,7 @@ function HomeAbout() {
     return (
         <motion.div
             id="about"
-            className="flex flex-col justify-center items-center border-b border-neutral-900 py-16 md:py-24 px-4 md:px-8"
+            className="flex flex-col justify-center items-center border-b border-neutral-900 sm:mt-0 mt-56 py-16 sm:py-24 px-4 sm:px-8"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"

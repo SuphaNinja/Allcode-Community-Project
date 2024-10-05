@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from "react-router-dom"
+import { Routes, Route, Link, useLocation } from "react-router-dom"
 import Home from "./pages/HomePage/Home"
 import NavBar from "./components/NavBar"
 import Signup from "./pages/SignupPage/Signup"
@@ -18,16 +18,21 @@ import { Button } from "./components/ui/button"
 import Footer from "./components/Footer"
 import PrivacyPolicy from "./pages/PrivacyPolicyPage/PrivacyPolicy"
 import FindPages from "./pages/FindPagesPage/FindPages"
+import Profile from "./pages/ProfilePage/ProfilePage"
 
 
 function App() {
-
   const { toast }= useToast();
+  const location = useLocation();
 
   const currentUser = useQuery({
     queryKey: ["currentUser"],
     queryFn: () => axiosInstance.get("/api/users/get-current-user")
   });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location.pathname]);
 
   useEffect(() => {
     if (currentUser.isSuccess && !currentUser.isLoading && !currentUser.data.data.error) {
@@ -93,11 +98,12 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<Login currentUser={currentUser} />} />
-          <Route path="/confirm-email/token/:token/username/:username" element={<ConfirmEmail currentUser={currentUser} />} />
+          <Route path="/signin" element={<Login/>} currentUser={currentUser}/>
+          <Route path="/confirm-email/token/:token/username/:username" element={<ConfirmEmail/>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password/token/:token/email/:email" element={<UpdatePassword />} />
           <Route path="/guide" element={<Guide />} />
+          <Route path="/profile/:userId" element={<Profile currentUser={currentUser} />} />
           <Route path="/livechat" element={<LiveChat currentUser={currentUser} />} />
           <Route path="/findpages" element={<FindPages />} />
           <Route path="/privacy" element={<PrivacyPolicy/>} />

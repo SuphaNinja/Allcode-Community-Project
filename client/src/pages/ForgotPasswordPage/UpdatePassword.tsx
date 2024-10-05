@@ -8,9 +8,6 @@ import { Form, FormLabel, FormField, FormControl, FormItem, FormMessage } from "
 import axiosInstance from '@/lib/axiosInstance';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
-import ModifiedNavBar from "@/components/ModifiedNavbar";
-import { motion } from "framer-motion";
 
 const updatePassSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -29,9 +26,6 @@ function UpdatePassword() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { token, email } = useParams();
-    const [ isTransitioning, setIsTransitioning ] = useState(false);
-
-
 
     const form = useForm<UpdatePassFormValues>({
         resolver: zodResolver(updatePassSchema),
@@ -55,11 +49,7 @@ function UpdatePassword() {
                     duration: 1500,
                 });
 
-                setIsTransitioning(true);
-
-                setTimeout(() => {
-                    navigate("/");
-                }, 1500);
+                navigate("/");
             };
         },
         onError: () => {
@@ -77,16 +67,6 @@ function UpdatePassword() {
     return (
         <div>
             <div className={`absolute top-24 left-0 h-screen  bg-slate-950 overflow-y-scroll`}>
-                <motion.div
-                    initial={{ x: '-100vw' }}
-                    animate={isTransitioning ? { x: 0 } : {}}
-                    transition={{ duration: 1.5 }}
-                    className={`overflow-x-hidden text-neutral-300 antialiased selection:bg-cyan-300 selection:text-cyan-900 bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] min-h-screen ${isTransitioning ? "" : "hidden"}`}
-                >
-                    <div className='container mx-auto px-8'>
-                        <ModifiedNavBar />
-                    </div>
-                </motion.div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="grid px-4 sm:w-1/3 mx-auto grid-cols-1 mt-36 pb-8 gap-8">
                         <FormField

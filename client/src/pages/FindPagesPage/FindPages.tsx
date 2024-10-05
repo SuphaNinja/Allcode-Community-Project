@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { CalendarIcon, TrendingUpIcon, SearchIcon } from 'lucide-react'
+import { CalendarIcon, TrendingUpIcon, SearchIcon, ArrowUpIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { Link } from 'react-router-dom'
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 import { ListOfPages } from '@/lib/ListOfPages'
 
 interface Page {
@@ -23,6 +24,7 @@ interface Page {
 export default function Pages() {
     const [sortedPages, setSortedPages] = useState<Page[]>([])
     const [searchQuery, setSearchQuery] = useState('')
+    const [showScrollTop, setShowScrollTop] = useState(false)
 
     useEffect(() => {
         const sorted = [...ListOfPages].sort((a, b) => {
@@ -31,6 +33,13 @@ export default function Pages() {
             return 0
         })
         setSortedPages(sorted)
+
+        const handleScroll = () => {
+            setShowScrollTop(window.pageYOffset > 300)
+        }
+
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
     const filteredPages = sortedPages.filter(page =>
@@ -38,8 +47,12 @@ export default function Pages() {
         page.createdBy.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
     return (
-        <div className="container mx-auto px-4 py-12">
+        <div className="container min-h-screen mx-auto px-4 py-12 relative">
             <h1 className="text-5xl font-bold mb-12 text-center text-primary">Explore Our Pages</h1>
             <div className="mb-12 max-w-2xl mx-auto">
                 <div className="relative">
@@ -49,7 +62,7 @@ export default function Pages() {
                         placeholder="Search pages or creators..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-12 pr-4 py-3 w-full rounded-full border-2 border-gray-300 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 text-lg"
+                        className="pl-12 pr-4 py-3 w-full rounded-full border border-neutral-700 focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50 text-lg"
                     />
                 </div>
             </div>
@@ -68,7 +81,7 @@ export default function Pages() {
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3, delay: index * 0.1 }}
                         >
-                            <Card className="h-full flex flex-col overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 bg-card">
+                            <Card className="h-full flex flex-col border-neutral-800 overflow-hidden rounded-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 bg-card">
                                 <div className="relative h-64 overflow-hidden">
                                     <img
                                         src={page.image}
@@ -122,6 +135,25 @@ export default function Pages() {
                     No pages found matching your search.
                 </motion.p>
             )}
+            <AnimatePresence>
+                {showScrollTop && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed bottom-8 right-8"
+                    >
+                        <Button
+                            onClick={scrollToTop}
+                            className="rounded-full p-3 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-lg"
+                            aria-label="Scroll to top"
+                        >
+                            <ArrowUpIcon className="h-6 w-6" />
+                        </Button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     )
 }

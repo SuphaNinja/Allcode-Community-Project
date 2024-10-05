@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export default function PrivacyPolicy() {
     return (
         <div className="min-h-screen flex flex-col items-center px-4 py-12">
-            <div className="w-full max-w-3xl space-y-8">
+            <div className="w-full max-w-4xl space-y-8">
                 <div className="text-center">
                     <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
                     <p className="mt-2 text-sm text-muted-foreground">
@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
                     </p>
                 </div>
 
-                <ScrollArea className="h-[60vh] rounded-md border p-4">
+                <ScrollArea className="h-[70vh] rounded-xl border border-neutral-700 p-4 sm:p-8">
                     <div className="space-y-6 text-sm">
                         <section>
                             <h2 className="text-xl font-semibold mb-2">1. Introduction</h2>

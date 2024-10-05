@@ -13,7 +13,7 @@ export default function HomeOurGoals() {
             opacity: 1,
             transition: {
                 staggerChildren: 0.2,
-                delayChildren: 0.3
+                delayChildren: 0.1
             }
         }
     };
@@ -24,7 +24,7 @@ export default function HomeOurGoals() {
             opacity: 1,
             y: 0,
             transition: {
-                duration: 1.5,
+                duration: 1,
                 ease: [0.6, -0.05, 0.01, 0.99]
             }
         }

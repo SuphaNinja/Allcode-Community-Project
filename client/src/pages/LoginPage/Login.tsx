@@ -4,15 +4,13 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from "@/components/ui/input";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, FormLabel, FormField, FormControl, FormItem, FormMessage } from "@/components/ui/form";
 import axiosInstance from '@/lib/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from "react";
-import { motion } from "framer-motion";
-import ModifiedNavBar from "@/components/ModifiedNavbar";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const loginSchema = z.object({
     email: z.string().min(4, "Invalid email or username"),
@@ -21,10 +19,17 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function Login({ currentUser }: any) {
-    const [isTransitioning, setIsTransitioning] = useState(false);
+export default function Login (currentUser:any) {
+
+    const [ isLoading, setIsLoading ] = useState(false);
     const navigate = useNavigate();
     const { toast } = useToast();
+
+    useEffect(() => {
+        if (currentUser.isSuccess && currentUser.data.data.success) {
+            navigate("/")
+        }
+    },[currentUser]);
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -35,18 +40,17 @@ export default function Login({ currentUser }: any) {
         onSuccess: (data) => {
             if (data.data.token) {
                 localStorage.setItem("token", data.data.token);
-                currentUser.refetch()
-                toast({
-                    title: `Welcome!`,
-                    description: <p className="text-white">You've been logged in successfully.</p>,
-                    duration: 1500,
-                });
 
-                setIsTransitioning(true);
+                setIsLoading(true)
                 setTimeout(() => {
                     navigate("/");
                     window.location.reload();
-                }, 1500);
+                    toast({
+                        title: `Welcome!`,
+                        description: <p className="text-white">You've been logged in successfully.</p>,
+                        duration: 1500,
+                    });
+                }, 1000);
             };
         }
     });
@@ -100,7 +104,7 @@ export default function Login({ currentUser }: any) {
                             type="submit"
                             disabled={login.isPending}
                         >
-                            {login.isPending ? (
+                            {isLoading ? (
                                 <>
                                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     Signing In...
@@ -124,17 +128,6 @@ export default function Login({ currentUser }: any) {
                     </div>
                 </div>
             </div>
-
-            {isTransitioning && (
-                <motion.div
-                    initial={{ x: '-100vw' }}
-                    animate={{ x: 0 }}
-                    transition={{ duration: 1.5 }}
-                    className="fixed inset-0 bg-background z-50 flex items-center justify-center"
-                >
-                    <ModifiedNavBar />
-                </motion.div>
-            )}
         </div>
     );
 }

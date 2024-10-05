@@ -53,9 +53,6 @@ function HomeBottomSection() {
                                 <Link to="/signup">Get Started</Link>
                             </Button>
                             <Button asChild variant="link" size="lg">
-                                <Link to="/signin">Sign In</Link>
-                            </Button>
-                            <Button asChild variant="link" size="lg">
                                 <a href="https://www.allcode.co/">Visit Allcode</a>
                             </Button>
                         </motion.div>   
