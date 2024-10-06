@@ -19,6 +19,7 @@ import Footer from "./components/Footer"
 import PrivacyPolicy from "./pages/PrivacyPolicyPage/PrivacyPolicy"
 import FindPages from "./pages/FindPagesPage/FindPages"
 import Profile from "./pages/ProfilePage/ProfilePage"
+import NotFound from "./pages/NotFound"
 
 
 function App() {
@@ -107,6 +108,7 @@ function App() {
           <Route path="/livechat" element={<LiveChat currentUser={currentUser} />} />
           <Route path="/findpages" element={<FindPages />} />
           <Route path="/privacy" element={<PrivacyPolicy/>} />
+          <Route path="*" element={<NotFound />} /> {}
         </Routes>
       </div>
       <Footer/>
