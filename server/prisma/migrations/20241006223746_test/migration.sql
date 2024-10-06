@@ -1,7 +1,24 @@
--- RedefineTables
-PRAGMA defer_foreign_keys=ON;
-PRAGMA foreign_keys=OFF;
-CREATE TABLE "new_Friendship" (
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "userName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "profileImage" TEXT,
+    "role" TEXT NOT NULL DEFAULT 'User',
+    "emailConfirmed" BOOLEAN NOT NULL DEFAULT false,
+    "emailConfirmationToken" TEXT,
+    "emailConfirmationExpiresAt" DATETIME,
+    "resetPasswordToken" TEXT,
+    "resetPasswordExpiresAt" DATETIME,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "Friendship" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
     "friendId" TEXT NOT NULL,
@@ -10,11 +27,9 @@ CREATE TABLE "new_Friendship" (
     CONSTRAINT "Friendship_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Friendship_friendId_fkey" FOREIGN KEY ("friendId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
-INSERT INTO "new_Friendship" ("createdAt", "friendId", "id", "isCloseFriend", "userId") SELECT "createdAt", "friendId", "id", "isCloseFriend", "userId" FROM "Friendship";
-DROP TABLE "Friendship";
-ALTER TABLE "new_Friendship" RENAME TO "Friendship";
-CREATE UNIQUE INDEX "Friendship_userId_friendId_key" ON "Friendship"("userId", "friendId");
-CREATE TABLE "new_Message" (
+
+-- CreateTable
+CREATE TABLE "Message" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "content" TEXT NOT NULL,
     "senderId" TEXT NOT NULL,
@@ -25,22 +40,26 @@ CREATE TABLE "new_Message" (
     CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Message_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
-INSERT INTO "new_Message" ("content", "createdAt", "id", "read", "receiverId", "senderId", "updatedAt") SELECT "content", "createdAt", "id", "read", "receiverId", "senderId", "updatedAt" FROM "Message";
-DROP TABLE "Message";
-ALTER TABLE "new_Message" RENAME TO "Message";
-CREATE TABLE "new_Notification" (
+
+-- CreateTable
+CREATE TABLE "Notification" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "type" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "senderId" TEXT NOT NULL,
     "receiverId" TEXT NOT NULL,
+    "linkUrl" TEXT NOT NULL DEFAULT '/profile',
     "read" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Notification_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Notification_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
-INSERT INTO "new_Notification" ("content", "createdAt", "id", "read", "receiverId", "senderId", "type") SELECT "content", "createdAt", "id", "read", "receiverId", "senderId", "type" FROM "Notification";
-DROP TABLE "Notification";
-ALTER TABLE "new_Notification" RENAME TO "Notification";
-PRAGMA foreign_keys=ON;
-PRAGMA defer_foreign_keys=OFF;
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_userName_key" ON "User"("userName");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Friendship_userId_friendId_key" ON "Friendship"("userId", "friendId");
