@@ -18,7 +18,9 @@ const axiosInstance = axios.create({
     headers: {
         'x-access-token': localStorage.getItem("token"),
     },
+    withCredentials: true
 });
+
 
 export default axiosInstance;
 
