@@ -42,6 +42,8 @@ export function initializeSocketServer(server) {
             socket.emit("new_message", message);
         });
     });
+
+    return io;
 }
 
 export function sendNotification(userId, notification) {
@@ -49,4 +51,11 @@ export function sendNotification(userId, notification) {
     if (socketId) {
         io.to(socketId).emit("notification", notification);
     }
+}
+
+export function getIO() {
+    if (!io) {
+        throw new Error('Socket.io not initialized');
+    }
+    return io;
 }
