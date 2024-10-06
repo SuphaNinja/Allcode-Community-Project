@@ -5,12 +5,20 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const libsql = createClient({
-    url: process.env.TURSO_DATABASE_URL,
-    authToken: process.env.TURSO_AUTH_TOKEN,
-});
+let prisma;
 
-const adapter = new PrismaLibSQL(libsql);
-const prisma = new PrismaClient({ adapter });
+if (process.env.NODE_ENV === "LOCAL") {
+    // Local development configuration
+    prisma = new PrismaClient();
+} else {
+    // Production configuration
+    const libsql = createClient({
+        url: process.env.TURSO_DATABASE_URL,
+        authToken: process.env.TURSO_AUTH_TOKEN,
+    });
+
+    const adapter = new PrismaLibSQL(libsql);
+    prisma = new PrismaClient({ adapter });
+}
 
 export default prisma;
