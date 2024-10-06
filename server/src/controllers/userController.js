@@ -616,7 +616,7 @@ export async function markNotificationAsRead(req, res) {
 
         res.status(200).send({ success: "Notification marked as read" });
 
-    } catch (error) {return res.status(500).send({ error: "An error occurred while marking the notification as read" })};
+    } catch (error) {return res.status(500).json({ error: 'An error occurred while marking the notification as read', details: error.message })}
 }
 
 export const markAllNotificationsAsRead = async (req, res) => {
