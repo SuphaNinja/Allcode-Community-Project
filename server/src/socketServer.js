@@ -1,18 +1,18 @@
 import { Server } from 'socket.io';
+import { createServer } from 'http';
 
-export default function SocketHandler(req, res) {
-    if (res.socket.server.io) {
-        console.log('Socket is already running');
-        res.end();
-        return;
-    }
+let io;
+const userSocketMap = new Map();
 
-    const io = new Server(res.socket.server);
-    res.socket.server.io = io;
+export function initializeSocketServer(app) {
+    const socketServer = createServer(app);
+    io = new Server(socketServer, {
+        cors: {
+            origin: "*",
+        },
+    });
 
-    const userSocketMap = new Map();
-
-    io.on('connection', (socket) => {
+    io.on("connection", (socket) => {
         socket.on("register", (userId) => {
             if (userId && socket.id) {
                 userSocketMap.set(userId, socket.id);
@@ -34,11 +34,16 @@ export default function SocketHandler(req, res) {
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit("new_message", message);
             }
-
+            
             socket.emit("new_message", message);
         });
     });
 
-    console.log('Socket is initializing');
-    res.end();
-}   
+    return socketServer;
+}
+export function sendNotification(userId, notification) {
+    const socketId = userSocketMap.get(userId);
+    if (socketId) {
+        io.to(socketId).emit("notification", notification);
+    }
+}

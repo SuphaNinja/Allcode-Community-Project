@@ -4,30 +4,11 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
-app.use(cors({
-    origin: ['https://www.allcodecommunity.com', 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'],
-    credentials: true
-}));
 app.use(express.json());
+app.use(cors());
 
-// API Routes
+// Routes
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
-
-app.get('/api', (req, res) => {
-    res.json({ message: "API is running" });
-});
-
-// Root route
-app.get('/', (req, res) => {
-    res.json({ message: "Server is running" });
-});
-
-// Handle 404 - Keep this as the last route
-app.use((req, res, next) => {
-    res.status(404).send("Sorry, that route doesn't exist.");
-});
 
 export default app;

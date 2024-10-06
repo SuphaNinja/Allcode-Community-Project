@@ -1,6 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaLibSQL } from "@prisma/adapter-libsql";
+import { PrismaClient } from '@prisma/client';
 import { createClient } from "@libsql/client";
+import { PrismaLibSQL } from "@prisma/adapter-libsql";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const libsql = createClient({
     url: process.env.TURSO_DATABASE_URL,
@@ -9,6 +12,5 @@ const libsql = createClient({
 
 const adapter = new PrismaLibSQL(libsql);
 const prisma = new PrismaClient({ adapter });
-
 
 export default prisma;
