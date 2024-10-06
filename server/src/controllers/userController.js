@@ -581,7 +581,7 @@ export async function markMessagesAsRead(req, res) {
             data: { read: true }
         });
 
-        res.status(200).send({ success: "Messages marked as read" });
+        res.status(200).json({ success: "Messages marked as read" });
 
     } catch (error) {return res.status(500).send({ error: "An error occurred while marking messages as read" })};
 };

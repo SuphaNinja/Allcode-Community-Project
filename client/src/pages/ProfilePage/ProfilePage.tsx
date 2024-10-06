@@ -14,6 +14,7 @@ import AccountInfo from './AccountInfo'
 import Header from './Header'
 import { Button } from '@/components/ui/button'
 import { Badge } from "@/components/ui/badge"
+import { motion } from 'framer-motion'
 
 interface Notification {
     id: string
@@ -157,7 +158,12 @@ export default function Profile({ currentUser }: any) {
     }));
 
     return (
-        <div className="min-h-screen bg-background py-8 sm:px-4">
+        <motion.div 
+            className="min-h-screen bg-background py-8 sm:px-4"
+            variants={{hidden: { opacity: 0},visible: {opacity: 1}}}
+            initial="hidden"
+            whileInView="visible"
+        >
             <div className="max-w-6xl mx-auto">
                 <Header
                     userData={userData}
@@ -222,6 +228,6 @@ export default function Profile({ currentUser }: any) {
                     </TabsContent>
                 </Tabs>
             </div>
-        </div>
+        </motion.div>
     )
 }
