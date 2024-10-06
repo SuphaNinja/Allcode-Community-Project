@@ -4,12 +4,8 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
-app.use(cors({
-    origin: ["*"],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ["*"],
-    credentials: true
-}));
+app.use(cors());
+
 app.use(express.json());
 
 // Routes
