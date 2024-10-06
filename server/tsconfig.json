@@ -13,7 +13,7 @@
   "include": [
     "EmailAssets/**/*.tsx",
     "index.js"
-  ], // Update paths to match your files
+  ],
   "exclude": [
     "node_modules"
   ]
