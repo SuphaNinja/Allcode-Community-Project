@@ -1,18 +1,21 @@
 import { Server } from 'socket.io';
-import { createServer } from 'http';
 
 let io;
 const userSocketMap = new Map();
 
-export function initializeSocketServer(app) {
-    const socketServer = createServer(app);
-    io = new Server(socketServer, {
+export function initializeSocketServer(server) {
+    io = new Server(server, {
+        path: "/api/socket",
         cors: {
-            origin: "*",
+            origin: ["https://www.allcodecommunity.com", "http://localhost:3000"],
+            methods: ["GET", "POST"],
+            credentials: true
         },
     });
 
     io.on("connection", (socket) => {
+        console.log("A user connected");
+
         socket.on("register", (userId) => {
             if (userId && socket.id) {
                 userSocketMap.set(userId, socket.id);
@@ -26,6 +29,7 @@ export function initializeSocketServer(app) {
                     break;
                 }
             }
+            console.log("User disconnected");
         });
 
         socket.on("send_message", (message) => {
@@ -34,13 +38,12 @@ export function initializeSocketServer(app) {
             if (receiverSocketId) {
                 io.to(receiverSocketId).emit("new_message", message);
             }
-            
+
             socket.emit("new_message", message);
         });
     });
-
-    return socketServer;
 }
+
 export function sendNotification(userId, notification) {
     const socketId = userSocketMap.get(userId);
     if (socketId) {

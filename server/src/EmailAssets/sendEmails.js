@@ -14,7 +14,7 @@ export async function sendEmailConfirmation(email, firstName, lastName, userName
         const emailHtml = ReactDOMServer.renderToString(emailContent);
 
         await resend.emails.send({
-            from: 'info@jhc-platbyggab.com',
+            from: 'noreply@allcodecommunity.com:USp7-ij$%wU9U;!',
             to: email,
             subject: 'Please confirm your email',
             html: emailHtml,
@@ -34,7 +34,7 @@ export async function sendResetPasswordEmail(email, token) {
         const emailHtml = ReactDOMServer.renderToString(emailContent);
 
         await resend.emails.send({
-            from: 'info@jhc-platbyggab.com',
+            from: 'noreply@allcodecommunity.com:USp7-ij$%wU9U;!',
             to: email,
             subject: 'Reset Password',
             html: emailHtml,
