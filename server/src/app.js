@@ -4,12 +4,14 @@ import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
-app.use(cors({
-    origin: ['https://www.allcodecommunity.com', 'http://localhost:3000'],
+const corsOptions = {
+    origin: 'https://www.allcodecommunity.com',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-access-token'],
     credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
