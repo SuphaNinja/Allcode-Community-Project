@@ -5,7 +5,7 @@ export default function ProfileSkeleton() {
     return (
         <div className="min-h-screen bg-background py-8 px-4">
             <div className="max-w-4xl mx-auto">
-                <Card className="mb-8 shadow-lg">
+                <Card className="mb-8 rounded-xl border border-neutral-800 shadow-xl">
                     <CardHeader className="pb-0">
                         <div className="flex items-center space-x-4">
                             <Skeleton className="w-32 h-32 rounded-full" />
