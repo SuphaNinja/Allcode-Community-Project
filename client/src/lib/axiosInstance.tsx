@@ -14,7 +14,7 @@ export default axiosInstance; */
 /* This is for production */
 
 const axiosInstance = axios.create({
-    baseURL: 'https://allcode-community-project-z4em.vercel.app:8080',
+    baseURL: 'https://allcode-community-project-z4em.vercel.app/api',
     headers: {
         'x-access-token': localStorage.getItem("token"),
     },
