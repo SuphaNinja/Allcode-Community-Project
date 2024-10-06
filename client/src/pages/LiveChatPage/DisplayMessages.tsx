@@ -109,7 +109,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/toggle-close-friend", { friendId }),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['friends'] })
-            setIsCloseFriend(data.data.success.isCloseFriend)
+            
         },
         onError: () => {
             toast({
@@ -122,6 +122,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
 
     const handleToggleCloseFriend = () => {
         toggleCloseFriend.mutate(friend.id)
+        setIsCloseFriend(!isCloseFriend)
     }
 
     useEffect(() => {
@@ -133,7 +134,6 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
 
     useEffect(() => {
         socket.on('new_message', (message: Message) => {
-            console.log(message)
             if (message.senderId === friend.id || message.senderId === currentUser.id) {
                 setMessages(prevMessages => [...prevMessages, message])
                 if (message.senderId === friend.id) {
