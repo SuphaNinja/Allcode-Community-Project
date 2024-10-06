@@ -107,7 +107,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
 
     const toggleCloseFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/toggle-close-friend", { friendId }),
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['friends'] })
             
         },
