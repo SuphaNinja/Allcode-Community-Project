@@ -31,6 +31,7 @@ function App() {
     queryFn: () => axiosInstance.get("/api/users/get-current-user")
   });
 
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname]);
@@ -91,6 +92,17 @@ function App() {
       };
     }
   }, [currentUser]);
+
+  if (currentUser.isLoading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-neutral-950 bg-opacity-50 z-50">
+        <div className="relative">
+          <div className="h-32 w-32 rounded-full border-t-8 border-b-8 border-cyan-500"></div>
+          <div className="absolute top-0 left-0 h-32 w-32 rounded-full border-t-8 border-b-8 border-cyan-300 animate-spin"></div>
+        </div>
+      </div>
+    )
+  };
 
   return (
     <div className="overflow-x-hidden text-neutral-300 selection:bg-cyan-300 selection:text-cyan-900 bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] min-h-screen">
