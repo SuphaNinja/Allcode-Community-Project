@@ -95,7 +95,7 @@ function App() {
 
   if (currentUser.isLoading) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-neutral-950 bg-opacity-50 z-50">
+      <div className="fixed inset-0 flex items-center justify-center bg-slate-950 z-50">
         <div className="relative">
           <div className="h-32 w-32 rounded-full border-t-8 border-b-8 border-cyan-500"></div>
           <div className="absolute top-0 left-0 h-32 w-32 rounded-full border-t-8 border-b-8 border-cyan-300 animate-spin"></div>
