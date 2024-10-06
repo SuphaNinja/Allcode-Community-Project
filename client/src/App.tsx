@@ -98,7 +98,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<Login/>} currentUser={currentUser}/>
+          <Route path="/signin" element={<Login/>} />
           <Route path="/confirm-email/token/:token/username/:username" element={<ConfirmEmail/>} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password/token/:token/email/:email" element={<UpdatePassword />} />

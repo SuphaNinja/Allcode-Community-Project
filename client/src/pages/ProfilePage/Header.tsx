@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Card, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { CalendarIcon, MailIcon, UsersIcon, UserPlusIcon, UserMinusIcon, Star } from 'lucide-react'

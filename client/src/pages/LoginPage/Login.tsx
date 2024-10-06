@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from "@/components/ui/input";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Form, FormLabel, FormField, FormControl, FormItem, FormMessage } from "@/components/ui/form";
 import axiosInstance from '@/lib/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const loginSchema = z.object({
     email: z.string().min(4, "Invalid email or username"),
@@ -19,17 +19,11 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function Login (currentUser:any) {
+export default function Login () {
 
     const [ isLoading, setIsLoading ] = useState(false);
     const navigate = useNavigate();
     const { toast } = useToast();
-
-    useEffect(() => {
-        if (currentUser.isSuccess && currentUser.data.data.success) {
-            navigate("/")
-        }
-    },[currentUser]);
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
