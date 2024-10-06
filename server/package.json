@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "postinstall": "prisma generate",
-    "build": "prisma generate",
+    "build": "prisma generate && next build",
     "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
