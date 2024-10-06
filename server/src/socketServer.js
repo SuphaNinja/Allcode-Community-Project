@@ -3,15 +3,8 @@ import { Server } from 'socket.io';
 let io;
 const userSocketMap = new Map();
 
-export function initializeSocketServer(server) {
-    io = new Server(server, {
-        path: "/api/socket",
-        cors: {
-            origin: ["https://www.allcodecommunity.com", "http://localhost:3000"],
-            methods: ["GET", "POST"],
-            credentials: true
-        },
-    });
+export function initializeSocketServer(socketIo) {
+    io = socketIo;
 
     io.on("connection", (socket) => {
         console.log("A user connected");
@@ -42,8 +35,6 @@ export function initializeSocketServer(server) {
             socket.emit("new_message", message);
         });
     });
-
-    return io;
 }
 
 export function sendNotification(userId, notification) {
