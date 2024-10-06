@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function ProfileSkeleton() {
     return (
-        <div className="min-h-screen bg-background py-8 sm:px-4">
+        <div className="h-screen w-screen bg-background py-8 sm:px-4">
             <div className="max-w-6xl mx-auto">
                 {/* Header Skeleton */}
                 <div className="flex flex-col sm:flex-row items-center mb-8">
