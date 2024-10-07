@@ -8,9 +8,9 @@ import { useMutation } from "@tanstack/react-query";
 import { Form, FormLabel, FormField, FormControl, FormItem, FormMessage } from "@/components/ui/form";
 import axiosInstance from '@/lib/axiosInstance';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const loginSchema = z.object({
     email: z.string().min(4, "Invalid email or username"),
@@ -19,11 +19,10 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function Login () {
-
-    const [ isLoading, setIsLoading ] = useState(false);
+export default function Login() {
+    const [isLoading, setIsLoading] = useState(false);
+    const [loginError, setLoginError] = useState<string | null>(null);
     const navigate = useNavigate();
-    const { toast } = useToast();
 
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(loginSchema),
@@ -39,17 +38,20 @@ export default function Login () {
                 setTimeout(() => {
                     navigate("/");
                     window.location.reload();
-                    toast({
-                        title: `Welcome!`,
-                        description: <p className="text-white">You've been logged in successfully.</p>,
-                        duration: 1500,
-                    });
                 }, 1000);
             };
+        },
+        onError: (error: any) => {
+            if (error.response && error.response.data && error.response.data.error) {
+                setLoginError(error.response.data.error);
+            } else {
+                setLoginError("An error occurred during login. Please try again.");
+            }
         }
     });
 
     const onSubmit = (data: LoginFormValues) => {
+        setLoginError(null);
         login.mutate(data);
     };
 
@@ -64,7 +66,12 @@ export default function Login () {
                         Enter your credentials to access your account
                     </p>
                 </div>
-
+                {loginError && (
+                    <Alert variant="destructive" className="mb-6">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>{loginError}</AlertDescription>
+                    </Alert>
+                )}
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField
@@ -93,10 +100,11 @@ export default function Login () {
                                 </FormItem>
                             )}
                         />
+                        
                         <Button
                             className="w-full"
                             type="submit"
-                            disabled={login.isPending}
+                            disabled={login.isPending || isLoading}
                         >
                             {isLoading ? (
                                 <>

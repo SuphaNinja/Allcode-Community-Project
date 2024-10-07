@@ -36,7 +36,7 @@ export default function Friends({ friends, isOwnProfile, totalFriends, onAddFrie
                         {friends.map((friend) => (
                             <div
                                 key={friend.id}
-                                className="flex items-center justify-between space-x-4 p-3 rounded-xl hover:brightness-125 transition-colors duration-200 border border-neutral-900 "
+                                className="flex hover:shadow-purple-500/50 hover:border-purple-500 hover:shadow-md items-center justify-between space-x-4 p-3 rounded-xl hover:brightness-125 transition-colors duration-200 border border-neutral-900 "
                             >
                                 <Link to={`/profile/${friend.id}`} className="flex items-center space-x-4">
                                     <Avatar className="w-12 h-12 border-2 border-primary/10">

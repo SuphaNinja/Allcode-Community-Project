@@ -6,15 +6,16 @@ import ResetPasswordEmail from '../../dist/EmailAssets/ResetPasswordEmail.js';
 
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+const isLocal = process.env.NODE_ENV === "LOCAL";
 
 export async function sendEmailConfirmation(email, firstName, lastName, userName, token) {
-    const confirmationUrl = `http://localhost:5173/confirm-email/token/${token}/username/${userName}`;
+    const confirmationUrl = `${isLocal ? "http://localhost:5173" : "https://www.allcodecommunity.com"}/confirm-email/token/${token}/username/${userName}`;
     try {
         const emailContent = React.createElement(ConfirmationEmail, { confirmationUrl, firstName, lastName});
         const emailHtml = ReactDOMServer.renderToString(emailContent);
 
         await resend.emails.send({
-            from: 'noreply@allcodecommunity.com:USp7-ij$%wU9U;!',
+            from: 'info@jhc-platbygg.com',
             to: email,
             subject: 'Please confirm your email',
             html: emailHtml,
@@ -27,14 +28,14 @@ export async function sendEmailConfirmation(email, firstName, lastName, userName
 }
 
 export async function sendResetPasswordEmail(email, token) {
-    const resetUrl = `http://localhost:5173/update-password/token/${token}/email/${email}`;
+    const resetUrl = `${isLocal ? "http://localhost:5173" : "https://www.allcodecommunity.com"}/update-password/token/${token}/email/${email}`;
     
     try {
         const emailContent = React.createElement(ResetPasswordEmail, { resetUrl, email });
         const emailHtml = ReactDOMServer.renderToString(emailContent);
 
         await resend.emails.send({
-            from: 'noreply@allcodecommunity.com:USp7-ij$%wU9U;!',
+            from: 'noreply@allcodecommunity.com',
             to: email,
             subject: 'Reset Password',
             html: emailHtml,

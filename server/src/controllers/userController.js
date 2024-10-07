@@ -2,11 +2,9 @@ import prisma from "../../prisma/Prisma.js";
 import { randomBytes } from 'crypto';
 import { addHours } from 'date-fns';
 import bcrypt from 'bcrypt';
-
 import { sendEmailConfirmation } from "../EmailAssets/sendEmails.js"
 import jwt from "jsonwebtoken";
 import { sendNotification } from "../socketServer.js";
-import { reverse } from "dns";
 
 export async function createUser(req, res) {
     const signUpData = req.body;
@@ -28,9 +26,19 @@ export async function createUser(req, res) {
         });
 
         await sendEmailConfirmation(createdUser.email, createdUser.firstName, createdUser.lastName, createdUser.userName, token);
-        res.status(200).send({ success: ""})
-    } catch (error) { return res.status(500).send({ error: 'User creation failed' })};
-};
+        res.status(200).send({ success: "User created successfully" })
+    } catch (error) {
+        if (error.code === 'P2002') {
+            const field = error.meta.target[0];
+            if (field === 'email') {
+                return res.status(400).send({ error: "Email already exists" });
+            } else if (field === 'userName') {
+                return res.status(400).send({ error: "Username already exists" });
+            }
+        }
+        return res.status(500).send({ error: "An error occurred while creating the user" });
+    }
+}
 
 export async function login(req, res) {
     const loginData = req.body;
@@ -41,7 +49,7 @@ export async function login(req, res) {
         });
         if (!user) { return res.status(404).send({ error: "Could not find user." }) };
 
-        const isPassMatch = bcrypt.compare(loginData.password, user.password);
+        const isPassMatch = await bcrypt.compare(loginData.password, user.password);
         if (!isPassMatch) { return res.status(400).send({ error: "Password or email is incorrect." }) };
 
         res.status(200).send({

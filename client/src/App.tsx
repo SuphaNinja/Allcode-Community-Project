@@ -37,7 +37,7 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (currentUser.isSuccess && !currentUser.isLoading && !currentUser.data.data.error) {
+    if (currentUser.isSuccess && !currentUser.isLoading && currentUser.data.data.success) {
       const handleConnect = () => {
         console.log('Connected:', socket.id);
       };

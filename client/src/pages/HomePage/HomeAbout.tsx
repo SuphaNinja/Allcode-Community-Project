@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 function HomeAbout() {
     const containerVariants = {
@@ -26,6 +28,34 @@ function HomeAbout() {
         }
     };
 
+    const handleScroll = () => {
+        const targetElement = document.getElementById('ourGoals');
+        if (targetElement) {
+            const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            const duration = 1500;
+            let start: number | null = null;
+
+            const animation = (currentTime: number) => {
+                if (start === null) start = currentTime;
+                const timeElapsed = currentTime - start;
+                const run = ease(timeElapsed, startPosition, distance, duration);
+                window.scrollTo(0, run);
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            };
+
+            const ease = (t: number, b: number, c: number, d: number) => {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--;
+                return -c / 2 * (t * (t - 2) - 1) + b;
+            };
+
+            requestAnimationFrame(animation);
+        }
+    };
+
     return (
         <motion.div
             id="about"
@@ -43,7 +73,7 @@ function HomeAbout() {
                     About the <span className="text-purple-400 font-semibold">Allcode Community Project</span>
                 </motion.h2>
                 <motion.div variants={itemVariants} className="grid gap-6 md:grid-cols-2">
-                    <Card>
+                    <Card className="rounded-xl border border-neutral-700">
                         <CardHeader>
                             <CardTitle>Welcome to the Community</CardTitle>
                         </CardHeader>
@@ -53,7 +83,7 @@ function HomeAbout() {
                             </p>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className="rounded-xl border border-neutral-700">
                         <CardHeader>
                             <CardTitle>Easy Contribution</CardTitle>
                         </CardHeader>
@@ -63,7 +93,7 @@ function HomeAbout() {
                             </p>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className="rounded-xl border border-neutral-700">
                         <CardHeader>
                             <CardTitle>Showcase Your Work</CardTitle>
                         </CardHeader>
@@ -73,7 +103,7 @@ function HomeAbout() {
                             </p>
                         </CardContent>
                     </Card>
-                    <Card>
+                    <Card className="rounded-xl border border-neutral-700">
                         <CardHeader>
                             <CardTitle>Smooth Contribution Process</CardTitle>
                         </CardHeader>
@@ -84,8 +114,15 @@ function HomeAbout() {
                         </CardContent>
                     </Card>
                 </motion.div>
+                <Button
+                    onClick={handleScroll}
+                    className="group p-2 rounded-full transition-all duration-300 ease-in-out hover:bg-primary/90"
+                    aria-label="Scroll to next section"
+                >
+                    <ChevronDown className="h-6 w-6 transition-transform duration-300 ease-in-out group-hover:translate-y-1" />
+                </Button>
                 <motion.div variants={itemVariants} className="mt-8">
-                    <Card>
+                    <Card className="rounded-xl border border-neutral-700">
                         <CardHeader>
                             <CardTitle>Join Us</CardTitle>
                         </CardHeader>

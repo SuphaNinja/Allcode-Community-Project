@@ -11,19 +11,14 @@ const httpServer = createServer(app);
 const isLocal = process.env.NODE_ENV === "LOCAL";
 
 const io = new Server(httpServer, {
-    path: "/api/socket",
     cors: {
-        origin: isLocal
-            ? ["http://localhost:5173"]
-            : ["https://www.allcodecommunity.com"],
-        methods: ["GET", "POST"],
-        credentials: true
+        origin: "*",
     },
 });
 
 initializeSocketServer(io);
 
-const PORT = process.env.PORT || (isLocal ? 3000 : 8080);
+const PORT =  7070;
 
 if (isLocal) {
     httpServer.listen(PORT, () => {

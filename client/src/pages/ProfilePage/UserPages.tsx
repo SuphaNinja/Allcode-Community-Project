@@ -49,7 +49,7 @@ export function UserPages({ pages }: UserPagesProps) {
                     {pages.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {pages.map((page) => (
-                                <Card key={page.path} className="flex flex-col overflow-hidden border border-neutral-900 rounded-xl hover:shadow-md transition-shadow">
+                                <Link to={page.path} key={page.path} className="flex hover:shadow-purple-500/50 hover:border-purple-500 hover:shadow-md  flex-col overflow-hidden border border-neutral-900 rounded-xl transition-shadow">
                                     <div className="relative h-48 overflow-hidden">
                                         <img src={page.image} alt={page.name} className="w-full h-full object-cover" />
                                         {page.trending && (
@@ -82,7 +82,7 @@ export function UserPages({ pages }: UserPagesProps) {
                                             </Link>
                                         </div>
                                     </CardContent>
-                                </Card>
+                                </Link>
                             ))}
                         </div>
                     ) : (

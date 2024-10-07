@@ -39,4 +39,8 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!', environment: isLocal ? "LOCAL" : "PRODUCTION" });
 });
 
+app.listen(8080, () => {
+    console.log(`app is running in LOCAL mode on port `);
+});
+
 export default app;

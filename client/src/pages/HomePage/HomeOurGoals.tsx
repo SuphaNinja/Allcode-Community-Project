@@ -37,6 +37,7 @@ export default function HomeOurGoals() {
 
     return (
         <motion.div
+            id="ourGoals"
             className="flex flex-col justify-center items-center border-b border-neutral-900 py-16 md:py-24 px-4 md:px-8"
             variants={containerVariants}
             initial="hidden"
@@ -55,7 +56,7 @@ export default function HomeOurGoals() {
                     className="grid gap-6 md:grid-cols-2"
                 >
                     <motion.div variants={itemVariants}>
-                        <Card>
+                        <Card className="rounded-xl border border-neutral-700">
                             <CardHeader>
                                 <CardTitle>Celebrate Creativity and Diversity</CardTitle>
                             </CardHeader>
@@ -67,7 +68,7 @@ export default function HomeOurGoals() {
                         </Card>
                     </motion.div>
                     <motion.div variants={itemVariants}>
-                        <Card>
+                        <Card className="rounded-xl border border-neutral-700">
                             <CardHeader>
                                 <CardTitle>Foster Exploration and Engagement</CardTitle>
                             </CardHeader>
@@ -79,7 +80,7 @@ export default function HomeOurGoals() {
                         </Card>
                     </motion.div>
                     <motion.div variants={itemVariants}>
-                        <Card>
+                        <Card className="rounded-xl border border-neutral-700">
                             <CardHeader>
                                 <CardTitle>Promote Collaborative Growth</CardTitle>
                             </CardHeader>
@@ -91,7 +92,7 @@ export default function HomeOurGoals() {
                         </Card>
                     </motion.div>
                     <motion.div variants={itemVariants}>
-                        <Card>
+                        <Card className="rounded-xl border border-neutral-700">
                             <CardHeader>
                                 <CardTitle>Uphold High Quality Standards</CardTitle>
                             </CardHeader>
@@ -103,7 +104,7 @@ export default function HomeOurGoals() {
                         </Card>
                     </motion.div>
                     <motion.div variants={itemVariants}>
-                        <Card>
+                        <Card className="rounded-xl border border-neutral-700">
                             <CardHeader>
                                 <CardTitle>Encourage Continuous Innovation</CardTitle>
                             </CardHeader>
@@ -115,7 +116,7 @@ export default function HomeOurGoals() {
                         </Card>
                     </motion.div>
                     <motion.div variants={itemVariants}>
-                        <Card>
+                        <Card className="rounded-xl border border-neutral-700">
                             <CardHeader>
                                 <CardTitle>Build a Supportive Community</CardTitle>
                             </CardHeader>

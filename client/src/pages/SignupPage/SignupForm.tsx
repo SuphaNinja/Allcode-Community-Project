@@ -49,11 +49,12 @@ export default function SignUpForm() {
         onSuccess: () => {
             navigate("/confirm-email/token/1/username/1")
         },
-        onError: () => {
+        onError: (error: any) => {
+            console.log(error)
             toast({
-                title: "Oops",
-                description: "Something went wrong, please try again later.",
-                variant: "destructive"
+                title: `${error.message}`,
+                description: <p className='text-red-500'>{error.response.data.error}</p>,
+                variant: "default"
             });
         }
     });

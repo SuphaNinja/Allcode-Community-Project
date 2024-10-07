@@ -35,7 +35,7 @@ export default function Pages() {
         setSortedPages(sorted)
 
         const handleScroll = () => {
-            setShowScrollTop(window.pageYOffset > 300)
+            setShowScrollTop(window.scrollY > 300)
         }
 
         window.addEventListener('scroll', handleScroll)
@@ -81,7 +81,7 @@ export default function Pages() {
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3, delay: index * 0.1 }}
                         >
-                            <Card className="h-full flex flex-col border-neutral-800 overflow-hidden rounded-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 bg-card">
+                            <Card className="h-full flex flex-col border-neutral-800 overflow-hidden rounded-xl transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 bg-card hover:shadow-purple-500/50 hover:border-purple-500">
                                 <div className="relative h-64 overflow-hidden">
                                     <img
                                         src={page.image}
