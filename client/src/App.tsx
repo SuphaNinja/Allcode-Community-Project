@@ -28,7 +28,8 @@ function App() {
 
   const currentUser = useQuery({
     queryKey: ["currentUser"],
-    queryFn: () => axiosInstance.get("/api/users/get-current-user")
+    queryFn: () => axiosInstance.get("/api/users/get-current-user"),
+    retry: false
   });
 
 
