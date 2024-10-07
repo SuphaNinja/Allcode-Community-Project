@@ -1,5 +1,3 @@
-import { Server } from 'socket.io';
-
 let io;
 const userSocketMap = new Map();
 

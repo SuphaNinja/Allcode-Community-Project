@@ -8,7 +8,7 @@ dotenv.config();
 
 const httpServer = createServer(app);
 
-const isLocal = process.env.NODE_ENV === "LOCAL";
+const isLocal = process.env.NODE_ENV === "development";
 
 const io = new Server(httpServer, {
     cors: {

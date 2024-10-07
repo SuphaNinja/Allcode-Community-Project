@@ -8,7 +8,7 @@ dotenv.config();
 
 const app = express();
 
-const isLocal = process.env.NODE_ENV === "LOCAL";
+const isLocal = process.env.NODE_ENV === "development";
 
 const corsOptions = {
     origin: isLocal ? 'http://localhost:5173' : 'https://www.allcodecommunity.com',
@@ -42,5 +42,6 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
     console.log(`app is running in LOCAL mode on port `);
 });
+
 
 export default app;

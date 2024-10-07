@@ -4,6 +4,10 @@ import { motion } from 'framer-motion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AlertTriangle, CheckCircle, InfoIcon } from 'lucide-react'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Badge } from '@/components/ui/badge'
 
 function Guide() {
     const animateLeftProps = {
@@ -62,27 +66,44 @@ function Guide() {
                     <TabsContent value="configurations">
                         <Card className="border-0 shadow-none">
                             <CardHeader>
-                                <CardTitle>Configurations for Local Development</CardTitle>
-                                <CardDescription>Adjusting settings for local work</CardDescription>
+                                <CardTitle>Local Development Configuration</CardTitle>
+                                <CardDescription>
+                                    Automated setup for a smooth development experience.
+                                </CardDescription>
                             </CardHeader>
-                            <CardContent>
-                                <motion.ul
-                                    className='space-y-4'
-                                    variants={animateSlideWhenScrolling(animateLeftProps)}
-                                    initial='hidden'
-                                    whileInView='visible'
-                                >
-                                    <li>
-                                        <span className='font-semibold'>Configure Axios:</span>
-                                        <p>In <code>/client/lib/axiosinstance.tsx</code>, comment out production config and activate local development.</p>
-                                        <img src='https://i.gyazo.com/f313c7904284fad48d8272987c484907.png' alt='Axios Configuration Example' className='w-full max-w-md mt-2' />
-                                    </li>
-                                    <li>
-                                        <span className='font-semibold'>Configure Prisma:</span>
-                                        <p>In <code>/server/prisma/Prisma.js</code>, comment out production config and activate local development.</p>
-                                        <img src='https://i.gyazo.com/20b85e44be57cc8824d3fd106c179518.png' alt='Prisma Configuration Example' className='w-full max-w-md mt-2' />
-                                    </li>
-                                </motion.ul>
+                            <CardContent className="space-y-4">
+                                <Alert variant="info" className="bg-muted">
+                                    <InfoIcon className="h-4 w-4" />
+                                    <AlertDescription>
+                                        Configurations are set automatically. Please do not modify unless instructed.
+                                    </AlertDescription>
+                                </Alert>
+
+                                <div>
+                                    <h3 className="text-base font-medium mb-2">Current Configuration</h3>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Service</TableHead>
+                                                <TableHead>Details</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            <TableRow>
+                                                <TableCell>Axios</TableCell>
+                                                <TableCell>Base URL: http://localhost:8080</TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>WebSocket</TableCell>
+                                                <TableCell>URL: ws://localhost:3000</TableCell>
+                                            </TableRow>
+                                        </TableBody>
+                                    </Table>
+                                </div>
+
+                                <p className="text-sm text-muted-foreground">
+                                    For configuration changes or improvements, please contact our support team.
+                                </p>
                             </CardContent>
                         </Card>
                     </TabsContent>

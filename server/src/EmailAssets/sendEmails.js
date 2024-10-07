@@ -6,7 +6,7 @@ import ResetPasswordEmail from '../../dist/EmailAssets/ResetPasswordEmail.js';
 
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const isLocal = process.env.NODE_ENV === "LOCAL";
+const isLocal = process.env.NODE_ENV === "development";
 
 export async function sendEmailConfirmation(email, firstName, lastName, userName, token) {
     const confirmationUrl = `${isLocal ? "http://localhost:5173" : "https://www.allcodecommunity.com"}/confirm-email/token/${token}/username/${userName}`;
