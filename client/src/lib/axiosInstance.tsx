@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isLocal = process.env.NODE_ENV === 'development';
 
 const axiosInstance = axios.create({
-    baseURL: isProduction
+    baseURL: !isLocal
         ? 'https://allcode-community-project-z4em.vercel.app'
         : 'http://localhost:8080',
     headers: {
