@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query"
 import axiosInstance from "./lib/axiosInstance"
 import Guide from "./pages/GuidePage/Guide"
 import LiveChat from "./pages/LiveChatPage/LiveChat"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import socket from "./lib/socket"
 import { useToast } from "./hooks/use-toast"
 import { ArrowRight, Bell } from "lucide-react"
@@ -25,11 +25,17 @@ import NotFound from "./pages/NotFound"
 function App() {
   const { toast }= useToast();
   const location = useLocation();
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
 
   const currentUser = useQuery({
     queryKey: ["currentUser"],
     queryFn: () => axiosInstance.get("/api/users/get-current-user"),
-    retry: false
+    enabled: !!token
   });
 
 
@@ -94,7 +100,7 @@ function App() {
     }
   }, [currentUser]);
 
-  if (currentUser.isLoading) {
+  if (currentUser.isLoading && token) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-slate-950 z-50">
         <div className="relative">
