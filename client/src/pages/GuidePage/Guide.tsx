@@ -71,7 +71,7 @@ function Guide() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <Alert variant="info" className="bg-muted">
+                                <Alert className="bg-muted">
                                     <InfoIcon className="h-4 w-4" />
                                     <AlertDescription>
                                         Configurations are set automatically. Please do not modify unless instructed.
