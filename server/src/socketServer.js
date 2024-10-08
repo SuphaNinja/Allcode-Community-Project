@@ -1,19 +1,14 @@
 import { Server } from "socket.io";
 import express from "express";
+import createServer from "http";
 
 const app = express();
-
 const api = express.Router();
-const port = 7070;
 
 const server = createServer(app);
 
 app.use("/api", api);
 app.use(express.json());
-
-server.listen(port => {
-    console.log(`App started on http://localhost:${port}`);
-});
 
 const io = new Server(server, {
     cors: {
@@ -52,9 +47,14 @@ io.on("connection", (socket) => {
     });
 });
 
+
 export function sendNotification(userId, notification) {
     const socketId = userSocketMap.get(userId);
     if (socketId) {
         io.to(socketId).emit("notification", notification);
     }
 }
+const port = 7070;
+server.listen(port => {
+    console.log(`App started on http://localhost:${port}`);
+});
