@@ -40,7 +40,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(8080, () => {
-    console.log(`app is running in LOCAL mode on port `);
+    console.log(`app is running in LOCAL mode on port 8080`);
 });
 
 

@@ -64,7 +64,7 @@ export async function updateUserProfile(req, res) {
     const userId = req.userId;
     const { firstName, lastName, profileImage, role, roleCode } = req.body;
     if (!userId) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        return res.status(401).send({ error: 'Unauthorized' });
     }
 
     try {
@@ -73,7 +73,7 @@ export async function updateUserProfile(req, res) {
             where: { id: userId }
         });
         if (!existingUser) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).send({ error: 'User not found' });
         }
 
         // Prepare update data
@@ -133,14 +133,14 @@ export async function updateUserProfile(req, res) {
             ? `User profile updated successfully. ${roleUpdateMessage}`
             : 'User profile updated successfully';
 
-        res.status(200).json({
+        res.status(200).send({
             success: true,
             message: responseMessage,
             user: updatedUser
         });
     } catch (error) {
         console.error('Error updating user profile:', error);
-        res.status(500).json({ error: 'An error occurred while updating the user profile' });
+        res.status(500).send({ error: 'An error occurred while updating the user profile' });
     }
 }
 
@@ -471,7 +471,7 @@ export async function getMessages(req, res) {
     const pageSize = 20;
 
     if (!friendId) {
-        return res.status(400).json({ error: "friendId is required in the request body" });
+        return res.status(400).send({ error: "friendId is required in the request body" });
     }
 
     try {
@@ -515,7 +515,7 @@ export async function getMessages(req, res) {
 
         const hasMore = totalCount > messages.length;
 
-        res.status(200).json({
+        res.status(200).send({
             success: {
                 messages: messages.reverse(),
                 hasMore,
@@ -524,7 +524,7 @@ export async function getMessages(req, res) {
         });
     } catch (error) {
         console.error('Error fetching messages:', error);
-        return res.status(500).json({ error: "An error occurred while fetching messages" });
+        return res.status(500).send({ error: "An error occurred while fetching messages" });
     }
 }
 
@@ -584,12 +584,23 @@ export async function markMessagesAsRead(req, res) {
     const  {friendId} = req.body;
 
     try {
-        await prisma.message.updateMany({
-            where: { senderId: friendId, receiverId: userId, read: false},
-            data: { read: true }
+        const unreadMessages = await prisma.message.findMany({
+            where: {
+                senderId: friendId,
+                receiverId: userId,
+                read: false
+            },
+            select: { id: true }
         });
 
-        res.status(200).json({ success: "Messages marked as read" });
+        for (const message of unreadMessages) {
+            await prisma.message.update({
+                where: { id: message.id },
+                data: { read: true }
+            });
+        }
+
+        res.status(200).send({ success: "Messages marked as read" });
 
     } catch (error) {return res.status(500).send({ error: "An error occurred while marking messages as read" })};
 };
@@ -624,7 +635,7 @@ export async function markNotificationAsRead(req, res) {
 
         res.status(200).send({ success: "Notification marked as read" });
 
-    } catch (error) {return res.status(500).json({ error: 'An error occurred while marking the notification as read', details: error.message })}
+    } catch (error) { return res.status(500).send({ error: 'An error occurred while marking the notification as read', details: error.message })}
 }
 
 export const markAllNotificationsAsRead = async (req, res) => {
@@ -632,15 +643,28 @@ export const markAllNotificationsAsRead = async (req, res) => {
     if (!userId) { return res.status(401).send({ error: 'Unauthorized' })};
 
     try {
-        const updatedNotifications = await prisma.notification.updateMany({
-            where: {receiverId: userId, read: false},  
-            data: { read: true }
-        })
+        const unreadNotifications = await prisma.notification.findMany({
+            where: {
+                receiverId: userId,
+                read: false
+            },
+            select: { id: true }
+        });
+
+        // Then, update each notification individually
+        let updatedCount = 0;
+        for (const notification of unreadNotifications) {
+            await prisma.notification.update({
+                where: { id: notification.id },
+                data: { read: true }
+            });
+            updatedCount++;
+        }
 
         res.status(200).send({
             success: true,
             message: 'All notifications marked as read',
-            updatedCount: updatedNotifications.count
+            updatedCount: updatedCount
         });
 
     } catch (error) {return res.status(500).send({ error: 'Failed to mark all notifications as read' })};
