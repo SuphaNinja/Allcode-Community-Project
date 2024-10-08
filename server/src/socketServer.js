@@ -53,7 +53,6 @@ export function sendNotification(userId, notification) {
     if (socketId) {
         io.to(socketId).emit("notification", notification);
     }
-
 }
 
 const port = 7070

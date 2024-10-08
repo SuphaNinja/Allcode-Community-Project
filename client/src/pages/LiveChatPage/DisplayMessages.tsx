@@ -136,6 +136,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
         socket.on('new_message', (message: Message) => {
             if (message.senderId === friend.id || message.senderId === currentUser.id) {
                 setMessages(prevMessages => [...prevMessages, message])
+                console.log(messages)
                 if (message.senderId === friend.id) {
                     markMessagesAsRead.mutate(friend.id)
                 }
@@ -179,7 +180,9 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
 
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault()
+        
         if (newMessage.trim()) {
+            setNewMessage("")
             sendMessage.mutate(newMessage)
             socket.emit("send_message", newMessage)
         }
