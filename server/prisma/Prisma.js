@@ -7,7 +7,7 @@ dotenv.config();
 
 let prisma;
 
-if (process.env.NODE_ENV === "LOCAL") {
+if (process.env.NODE_ENV === "development") {
     // Local development configuration
     prisma = new PrismaClient();
 } else {

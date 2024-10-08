@@ -615,8 +615,8 @@ export async function markNotificationAsRead(req, res) {
     const { notificationId } = req.body;
 
     try {
-        const updatedNotification = await prisma.notification.updateMany({
-            where: { id: notificationId, receiverId: userId, read: false},
+        const updatedNotification = await prisma.notification.update({
+            where: { id: notificationId, receiverId: userId},
             data: { read: true }
         });
 
