@@ -24,8 +24,8 @@ export async function createUser(req, res) {
                 emailConfirmationExpiresAt: addHours(new Date(), 2),
             },
         });
-
-        await sendEmailConfirmation(createdUser.email, createdUser.firstName, createdUser.lastName, createdUser.userName, token);
+        const encodedToken = encodeURIComponent(createdUser.emailConfirmationToken);
+        await sendEmailConfirmation(createdUser.email, createdUser.firstName, createdUser.lastName, createdUser.userName, encodedToken);
         res.status(200).send({ success: "User created successfully" })
     } catch (error) {
         if (error.code === 'P2002') {
@@ -58,6 +58,32 @@ export async function login(req, res) {
         });
 
     } catch (error) {return res.status(500).send({ error: "Something went wrong when trying to verify your email, please try again later." })};
+};
+
+export async function deleteUser(req,res) {
+    const userId = req.userId;
+    const { password } = req.body; 
+
+    if (!userId || !password) {
+        return res.status(400).send({ error: "Missing required fields" });
+    }
+    try {
+        const userToDelete = await prisma.user.findUnique({
+            where: {id: userId}
+        });
+        if (!userToDelete) { return res.status(404).send({error: "User not  found."}) };
+
+        const isPassMatch = await bcrypt.compare(password ,userToDelete.password);
+        if (!isPassMatch) { return res.status(401).send({ error: "Invalid credentials"})};
+
+        await prisma.user.delete({
+            where: {id: userId}
+        });
+        
+        res.status(200).send({ success: `${userToDelete.firstName} ${userToDelete.lastName} has been deleted!` });
+    } catch(error) {
+        return res.status(500).send({error: "Failed to delete your account, try again later."})
+    };
 };
 
 export async function updateUserProfile(req, res) {
@@ -348,7 +374,7 @@ export async function toggleCloseFriend(req, res) {
     const userId = req.userId;
     const { friendId } = req.body;
 
-    if (!friendId) {return res.status(400).send({ error: "friendId is required" })};
+    if (!friendId) { return res.status(400).send({ error: "friendId is required" })};
 
     try {
         const user = await prisma.user.findUnique({

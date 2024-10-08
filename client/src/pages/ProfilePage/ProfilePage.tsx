@@ -59,7 +59,10 @@ export default function Profile({ currentUser }: any) {
 
     const removeFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post(`/api/users/remove-friend`, { friendId }),
-        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['user', userId] }) },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['user', userId] })
+            queryClient.invalidateQueries({ queryKey: ['friends'] })
+            },
         onError: () => {
             toast({
                 title: "Error",

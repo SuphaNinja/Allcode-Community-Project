@@ -65,6 +65,7 @@ export default function Sidebar({ onFriendSelect }: SidebarProps) {
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/add-friend", { friendId }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['friends'] })
+            queryClient.invalidateQueries({ queryKey: ['allUsers'] })
             toast({
                 title: "Friend added",
                 description: <p className='text-neutral-300'>You've successfully added a new friend.</p>,

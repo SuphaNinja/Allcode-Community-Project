@@ -2,6 +2,9 @@ import prisma from "../../prisma/Prisma.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendResetPasswordEmail } from "../EmailAssets/sendEmails.js";
+import { randomBytes } from 'crypto';
+import { addHours } from 'date-fns';
+import { sendEmailConfirmation } from "../EmailAssets/sendEmails.js";
 
 export async function confirmEmail(req, res) {
     const { token, username } = req.body;
@@ -15,7 +18,7 @@ export async function confirmEmail(req, res) {
         });
 
         if (!user) { return res.status(404).send({ error: "Could not find user to verify." }) };
-        if (user.emailConfirmed) { return res.status(404).send({ error: "Email has already been verified." }) };
+        if (user.emailConfirmed) { return res.status(401).send({ error: "Email has already been verified." }) };
 
         const isTokenMatch = bcrypt.compare(token, user.emailConfirmationToken);
         if (!isTokenMatch) { return res.status(400).send({ error: "Invalid or expired token" }) };
@@ -38,6 +41,33 @@ export async function confirmEmail(req, res) {
         res.status(500).send({ error: "Something went wrong when trying to verify your email, please try again later." });
         return;
     };
+};
+
+export async function manuallySendEmailConfirmation(req, res) {
+    const userId = req.userId; 
+    if (!userId) { return res.status(404).send({error: "User not found."})};
+
+    const token = randomBytes(32).toString('hex');
+    const hashedToken = await bcrypt.hash(token, 10);
+
+    try {
+        const user = await prisma.user.update({
+            where: {id: userId},
+            data: {
+                emailConfirmationToken: hashedToken,
+                emailConfirmationExpiresAt: addHours(new Date(), 2),
+            }
+        });
+        if (!user) { return res.status(404).send({error: "User not found."})};
+
+        const encodedToken = encodeURIComponent(user.emailConfirmationToken);
+        await sendEmailConfirmation(user.email, user.firstName, user.lastName, user.userName, encodedToken);
+
+        res.status(200).send({success: "Check your email and follow the instructions."})
+
+    } catch(error) {
+        console.log(error)
+        return res.status(500).send({error: "Something went wrong when trying to send the email confirmation, please try again later."})}
 };
 
 export async function resetPassword(req, res) {
