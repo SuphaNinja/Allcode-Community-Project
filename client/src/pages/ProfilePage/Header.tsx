@@ -96,13 +96,22 @@ export default function Header({
                 <div className="flex flex-col space-y-6">
                     <div className="flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8">
                         <Avatar className="w-48 h-48">
-                            <AvatarImage
-                                src={userData.profileImage}
-                                alt={`${userData.firstName} ${userData.lastName}`}
-                            />
-                            <AvatarFallback className="text-6xl">
-                                {`${userData.firstName[0]}${userData.lastName[0]}`}
-                            </AvatarFallback>
+                            {imageLoaded ? (
+                            <>
+                                <AvatarImage
+                                    src={userData.profileImage}
+                                    alt={`${userData.firstName} ${userData.lastName}`}
+                                />
+                                <AvatarFallback className="text-6xl">
+                                    {`${userData.firstName[0]}${userData.lastName[0]}`}
+                                </AvatarFallback>
+                            </>
+                            ): (
+                                <AvatarFallback className="text-6xl">
+                                    {`${userData.firstName[0]}${userData.lastName[0]}`}
+                                </AvatarFallback>
+                            )
+                            }
                         </Avatar>
                         <div className="flex-grow flex flex-col justify-center md:h-48">
                             <div className="text-center md:text-left">
