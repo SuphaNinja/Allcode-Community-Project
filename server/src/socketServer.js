@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import express from "express";
-import createServer from "http";
+import { createServer } from "node:http";
 
 const app = express();
 const api = express.Router();
@@ -53,8 +53,10 @@ export function sendNotification(userId, notification) {
     if (socketId) {
         io.to(socketId).emit("notification", notification);
     }
+
 }
-const port = 7070;
-server.listen(port => {
+
+const port = 7070
+server.listen(port, () => {
     console.log(`App started on http://localhost:${port}`);
 });
