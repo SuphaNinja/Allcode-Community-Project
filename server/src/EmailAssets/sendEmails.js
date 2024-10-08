@@ -15,7 +15,7 @@ export async function sendEmailConfirmation(email, firstName, lastName, userName
         const emailHtml = ReactDOMServer.renderToString(emailContent);
 
         await resend.emails.send({
-            from: 'info@jhc-platbygg.com',
+            from: 'noreply1@allcodecommunity.com',
             to: email,
             subject: 'Please confirm your email',
             html: emailHtml,
