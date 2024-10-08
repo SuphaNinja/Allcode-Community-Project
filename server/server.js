@@ -16,16 +16,8 @@ const io = new Server(httpServer, {
     },
 });
 
-initializeSocketServer(io);
 
-const PORT =  7070;
 
-if (isLocal) {
-    httpServer.listen(PORT, () => {
-        console.log(`Server is running in LOCAL mode on port ${PORT}`);
-    });
-} else {
-    console.log(`Server is configured for PRODUCTION mode on port ${PORT}`);
-}
+
 
 export default httpServer;
