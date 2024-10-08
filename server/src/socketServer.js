@@ -2,10 +2,12 @@ import { Server } from "socket.io";
 import express from "express";
 
 const app = express();
+
 const api = express.Router();
 const port = 7070;
 
 const server = createServer(app);
+
 app.use("/api", api);
 app.use(express.json());
 
