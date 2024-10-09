@@ -170,7 +170,7 @@ export default function Profile({ currentUser }: any) {
         ...friend,
         isFriend: true
     }));
-    if (!user.isLoading) { return <ProfileSkeleton /> }
+    if (user.isLoading) { return <ProfileSkeleton /> }
 
     return (
         <motion.div 
