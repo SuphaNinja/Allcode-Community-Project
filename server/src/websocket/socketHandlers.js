@@ -25,6 +25,11 @@ export async function handleSendMessage(io, {messageContent}) {
         const newMessage = await prisma.message.create({
             data: { content: messageContent.content, senderId: messageContent.senderId, receiverId: messageContent.receiverId, }
         });
+        const receiverSocketId = getUserSocketId(messageContent.receiverId);
+        const senderSocketId = getUserSocketId(messageContent.senderId);
+        if (!newMessage) {
+            return io.to(senderSocketId).emit("error_sending_message", "Error sending message");
+        }
 
         const sender = await prisma.user.findUnique({
             where: { id: messageContent.senderId }
@@ -48,8 +53,7 @@ export async function handleSendMessage(io, {messageContent}) {
             senderId: messageContent.senderId
         });
         
-        const receiverSocketId = getUserSocketId(messageContent.receiverId);
-        const senderSocketId = getUserSocketId(messageContent.senderId);
+        
         if (receiverSocketId) {
             io.to(receiverSocketId).emit("new_message", newMessage);
         }
