@@ -19,22 +19,18 @@ export function handleConnection(socket) {
 }
 
 export async function handleSendMessage(io, {messageContent}) {
-    console.log("testtstst",messageContent)
-
     try {
         const newMessage = await prisma.message.create({
             data: { content: messageContent.content, senderId: messageContent.senderId, receiverId: messageContent.receiverId, }
         });
         const receiverSocketId = getUserSocketId(messageContent.receiverId);
         const senderSocketId = getUserSocketId(messageContent.senderId);
-        if (!newMessage) {
-            return io.to(senderSocketId).emit("error_sending_message", "Error sending message");
-        }
+        if (!newMessage) { return io.to(senderSocketId).emit("error_sending_message", "Error creating a new message, please try again later!")};
 
         const sender = await prisma.user.findUnique({
             where: { id: messageContent.senderId }
         });
-
+        if (!sender) { return io.to(senderSocketId).emit("error_sending_message", "Error sending message, could not find the receiver!") };
         await prisma.notification.create({
             data: {
                 type: 'NEW_MESSAGE',
@@ -45,10 +41,10 @@ export async function handleSendMessage(io, {messageContent}) {
             }
         });
 
-        sendNotification(messageContent.receiverId, {
+        sendNotification(io, messageContent.receiverId, {
             type: 'NEW_MESSAGE',
             Title: `New message from ${sender.firstName} ${sender.lastName}`,
-            content: 'You have a new message',
+            content: `Message: ${newMessage.content}`,
             linkUrl: "/livechat",
             senderId: messageContent.senderId
         });
@@ -60,8 +56,8 @@ export async function handleSendMessage(io, {messageContent}) {
         io.to(senderSocketId).emit("new_message", newMessage);
 
     } catch (error) {
-        console.log(error)
-        
+        if (!newMessage) {
+            return io.to(senderSocketId).emit("error_sending_message", "Error sending message, please try again later!");
+        }
     };
-    
 }

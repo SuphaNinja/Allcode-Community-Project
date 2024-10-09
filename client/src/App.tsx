@@ -38,6 +38,10 @@ function App() {
     enabled: !!token
   });
 
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength - 3) + '...';
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -54,36 +58,29 @@ function App() {
       };
 
       const handleNotification = (notification: any) => {
-          const { dismiss } = toast({
-            description: (
-              <div className="flex flex-col items-start space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Bell className="h-5 w-5 text-blue-500" />
-                  <span className="font-semibold text-neutral-100">{notification.Title}</span>
-                </div>
-                <p className="text-sm text-neutral-300">{notification.content}</p>
-                <Link
-                  to={notification.linkUrl}
-                  className="group flex items-center space-x-2 text-sm font-medium text-blue-500 hover:text-blue-400 transition-colors"
-                >
-                  <span>View</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
+        console.log("connected")
+        toast({
+          description: (
+            <div className="flex flex-col items-start space-y-3">
+              <div className="flex items-center space-x-2">
+                <Bell className="h-5 w-5 text-blue-500" />
+                <span className="font-semibold text-neutral-100">{notification.Title}</span>
               </div>
-            ),
-            className: " border border-neutral-800 rounded-xl shadow-lg",
-            duration: 5000,
-            action: (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => dismiss()}
-                className="mt-2 text-neutral-300 hover:text-neutral-100 hover:bg-neutral-800 border-neutral-700"
+              <p className="text-sm text-neutral-300">
+                {truncateText(notification.content, 50)}
+              </p>
+              <Link
+                to={notification.linkUrl}
+                className="group flex items-center space-x-2 text-sm font-medium text-blue-500 hover:text-blue-400 transition-colors"
               >
-                Dismiss
-              </Button>
-            ),
-          });
+                <span>View</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+          ),
+            className: "border border-neutral-800 rounded-xl shadow-lg",
+            duration: 5000,
+        });
       };
 
       socket.on("connect", handleConnect);

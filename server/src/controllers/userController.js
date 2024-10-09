@@ -454,44 +454,6 @@ export async function getFriends(req, res) {
     } catch (error) {return res.status(500).send({ error: "An error occurred while fetching friends" })};
 };
 
-export async function sendMessage(req, res) {
-    const senderId = req.userId
-    const { receiverId, content } = req.body
-
-    if (!receiverId || !content) { return res.status(400).send({ error: "receiverId and content are required" })};
-
-    try {
-        const newMessage = await prisma.message.create({
-            data: { content, senderId, receiverId,}
-        });
-
-        const sender = await prisma.user.findUnique({
-            where: { id: senderId }
-        })
-
-        await prisma.notification.create({
-            data: {
-                type: 'NEW_MESSAGE',
-                content: `You have a new message from ${sender.firstName} ${sender.lastName}!`,
-                senderId: senderId,
-                receiverId: receiverId,
-                linkUrl: "/livechat"
-            }
-        });
-
-        sendNotification(receiverId, {
-            type: 'NEW_MESSAGE',
-            Title: `New message from ${sender.firstName} ${sender.lastName}`,
-            content: 'You have a new message',
-            linkUrl: "/livechat",
-            senderId: senderId
-        });
-
-        res.status(201).send({ success: newMessage })
-    } catch (error) {
-        console.log(error) 
-        return res.status(500).send({ error: "An error occurred while sending the message" })};
-};
 
 export async function getMessages(req, res) {
     const userId = req.userId;

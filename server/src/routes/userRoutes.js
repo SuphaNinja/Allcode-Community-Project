@@ -1,4 +1,4 @@
-import { createUser, login, getCurrentUser, addFriend, removeFriend, getAllUsers, getFriends, getMessages, sendMessage, markMessagesAsRead, getFriendsWithLastMessage, toggleCloseFriend, getUserById, getNotifications, markNotificationAsRead, markAllNotificationsAsRead, updateUserProfile, deleteUser } from "../controllers/userController.js"
+import { createUser, login, getCurrentUser, addFriend, removeFriend, getAllUsers, getFriends, getMessages, markMessagesAsRead, getFriendsWithLastMessage, toggleCloseFriend, getUserById, getNotifications, markNotificationAsRead, markAllNotificationsAsRead, updateUserProfile, deleteUser } from "../controllers/userController.js"
 import express from "express";
 import verifyToken from "../controllers/verifyToken.js";
 
@@ -18,7 +18,6 @@ userRoutes.post("/remove-friend", verifyToken, removeFriend)
 userRoutes.post("/toggle-close-friend", verifyToken, toggleCloseFriend)
 
 userRoutes.post("/get-messages", verifyToken, getMessages)
-userRoutes.post("/send-message", verifyToken, sendMessage)
 userRoutes.post("/read-message", verifyToken, markMessagesAsRead)
 userRoutes.get("/get-friends-with-last-message", verifyToken, getFriendsWithLastMessage)
 

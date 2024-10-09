@@ -1,5 +1,8 @@
 import { io } from "socket.io-client";
 
-const socket = io("https://socket.allcodecommunity.com");
+const isLocal = process.env.NODE_ENV === "development"
+
+
+const socket = io(`${isLocal ? "http://localhost:7070" : "https://socket.allcodecommunity.com"}`);
 
 export default socket;

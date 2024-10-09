@@ -5,7 +5,7 @@ import { Menu } from "lucide-react"
 import Sidebar from './Sidebar'
 import DisplayMessages from './DisplayMessages'
 
-type Friend = {
+type User = {
     id: string
     firstName: string
     lastName: string
@@ -14,11 +14,21 @@ type Friend = {
     profileImage?: string
 }
 
-export default function LiveChat({ currentUser }: any) {
-    const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null)
+type LiveChatProps = {
+    currentUser: {
+        data: {
+            data: {
+                success: User
+            }
+        }
+    }
+}
+
+export default function LiveChat({ currentUser }: LiveChatProps) {
+    const [selectedFriend, setSelectedFriend] = useState<User | null>(null)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-    const handleFriendSelect = (friend: Friend) => {
+    const handleFriendSelect = (friend: User) => {
         setSelectedFriend(friend)
         setIsMobileMenuOpen(false) 
     }
@@ -36,14 +46,20 @@ export default function LiveChat({ currentUser }: any) {
                     </SheetTrigger>
                     <SheetContent side="left" className="w-[80%] sm:w-[385px] p-0">
                         <div className="p-4 font-semibold text-neutral-300 border-b border-neutral-600">Friends</div>
-                        <Sidebar onFriendSelect={handleFriendSelect} />
+                        <Sidebar 
+                            onFriendSelect={handleFriendSelect} 
+                            selectedFriendId={selectedFriend?.id || null}
+                        />
                     </SheetContent>
                 </Sheet>
             </div>
 
             {/* Friend list sidebar (hidden on mobile) */}
             <div className="hidden sm:block w-80 border-r border-neutral-600">
-                <Sidebar onFriendSelect={handleFriendSelect} />
+                <Sidebar 
+                    onFriendSelect={handleFriendSelect} 
+                    selectedFriendId={selectedFriend?.id || null}
+                />
             </div>
 
             {/* Message display area */}
@@ -61,10 +77,11 @@ export default function LiveChat({ currentUser }: any) {
                     </div>
                 ) : (
                     <div className='sm:hidden'>
-                        <Sidebar onFriendSelect={handleFriendSelect} />
+                        <Sidebar 
+                            onFriendSelect={handleFriendSelect} 
+                            selectedFriendId={null}
+                        />
                     </div>
-                        
-                  
                 )}
             </div>
         </div>

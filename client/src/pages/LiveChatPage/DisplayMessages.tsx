@@ -30,7 +30,7 @@ type User = {
     email: string
     profileImage?: string
     isCloseFriend?: boolean
-}
+};
 
 type Message = {
     id: string
@@ -40,24 +40,24 @@ type Message = {
     read: boolean
     createdAt: string
     updatedAt: string
-}
+};
 
 type DisplayMessagesProps = {
     friend: User
     currentUser: User
     onFriendRemoved: () => void
-}
+};
 
 export default function DisplayMessages({ friend, currentUser, onFriendRemoved }: DisplayMessagesProps) {
-    const [newMessage, setNewMessage] = useState("")
-    const [messages, setMessages] = useState<Message[]>([])
-    const { toast } = useToast()
-    const queryClient = useQueryClient()
-    const lastMessageRef = useRef<HTMLDivElement>(null)
+    const [newMessage, setNewMessage] = useState("");
+    const [messages, setMessages] = useState<Message[]>([]);
+    const { toast } = useToast();
+    const queryClient = useQueryClient();
+    const lastMessageRef = useRef<HTMLDivElement>(null);
     const [isCloseFriend, setIsCloseFriend] = useState(friend.isCloseFriend);
-    const [pageNumber, setPageNumber] = useState(1)
-    const scrollAreaRef = useRef<HTMLDivElement>(null)
-    const [isScrollLocked, setIsScrollLocked] = useState(false)
+    const [pageNumber, setPageNumber] = useState(1);
+    const scrollAreaRef = useRef<HTMLDivElement>(null);
+    const [isScrollLocked, setIsScrollLocked] = useState(false);
 
     const { data: initialMessages, isLoading } = useQuery({
         queryKey: ['messages', friend.id, pageNumber],
@@ -158,26 +158,25 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
     };
 
     const handleNewMessage = useCallback((message: Message) => {
-        console.log("new message recieved ",message)
         if (message.senderId === friend.id || message.senderId === currentUser.id) {
             setMessages(prevMessages => [...prevMessages, message]);
             markMessagesAsRead.mutate(friend.id);
         }
     }, [currentUser.id, friend.id]);
 
-    const handleErrorSendingMessage = (data:any) => {
-        console.log(data)
-    };
+    const handleErrorSendingMessage = useCallback((error: any) => {
+        toast({title: "Error", description: error});
+    }, []);
 
     useEffect(() => {
-        socket.on("error_sending_message", handleErrorSendingMessage)
+        socket.on("error_sending_message", handleErrorSendingMessage);
         socket.on('new_message', handleNewMessage);
 
         return () => {
             socket.off('new_message', handleNewMessage);
-            socket.off('new_message', handleErrorSendingMessage);
+            socket.off('error_sending_message', handleErrorSendingMessage);
         };
-    }, [handleNewMessage, handleErrorSendingMessage]);
+    }, [socket, handleNewMessage, handleErrorSendingMessage]);
 
     return (
         <div className="flex flex-col h-full rounded-lg shadow-xl overflow-hidden sm:border border-gray-700">
@@ -252,14 +251,15 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                         )}
                         <AnimatePresence>
                             {messages.map((message: Message, index) => (
-                                <MessageItem
-                                    key={message.id}
-                                    message={message}
-                                    friend={friend}
-                                    currentUser={currentUser}
-                                    isLastMessage={index === messages.length - 1}
-                                    lastMessageRef={lastMessageRef}
-                                />
+                                <div key={message.id}>
+                                    <MessageItem
+                                        message={message}
+                                        friend={friend}
+                                        currentUser={currentUser}
+                                        isLastMessage={index === messages.length - 1}
+                                        lastMessageRef={lastMessageRef}
+                                    />
+                                </div>
                             ))}
                         </AnimatePresence>
                     </>
@@ -272,7 +272,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                         placeholder="Type a message..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
-                        className="flex-1 mr-2"
+                        className="flex-1 mr-2 border border-neutral-700 rounded-xl text-neutral-300 placeholder:text-neutral-300"
                     />
                     <Button type="submit" size="icon" className="bg-primary hover:bg-primary/90">
                         <Send className="h-4 w-4" />
