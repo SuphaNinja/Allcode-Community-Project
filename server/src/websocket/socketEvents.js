@@ -1,6 +1,6 @@
 import { handleConnection, handleSendMessage } from "./socketHandlers.js";
 
-export function setupSocketEvents(io) {
+export async function setupSocketEvents(io) {
     io.on("connection", (socket) => {
         handleConnection(socket);
 
