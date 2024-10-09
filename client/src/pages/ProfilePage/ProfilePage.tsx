@@ -30,6 +30,7 @@ export default function Profile({ currentUser }: any) {
     const { toast } = useToast()
     const queryClient = useQueryClient()
     const [isCloseFriend, setIsCloseFriend] = useState(false)
+    const [removingFriendId, setRemovingFriendId] = useState<string | null>(null)
 
     const user = useQuery({
         queryKey: ["user", userId],
@@ -59,10 +60,13 @@ export default function Profile({ currentUser }: any) {
 
     const removeFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post(`/api/users/remove-friend`, { friendId }),
+        onMutate: (friendId) => {
+            setRemovingFriendId(friendId)
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['user', userId] })
             queryClient.invalidateQueries({ queryKey: ['friends'] })
-            },
+        },
         onError: () => {
             toast({
                 title: "Error",
@@ -70,7 +74,14 @@ export default function Profile({ currentUser }: any) {
                 variant: "destructive",
             })
         },
+        onSettled: () => {
+            setRemovingFriendId(null)
+        },
     });
+
+    const handleRemoveFriend = async (friendId: string) => {
+        await removeFriend.mutateAsync(friendId)
+    }
 
     const toggleCloseFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/toggle-close-friend", { friendId }),
@@ -217,7 +228,8 @@ export default function Profile({ currentUser }: any) {
                             totalFriends={userData.friends.length}
                             currentUserId={currentUser.data.data.success.id}
                             onAddFriend={(friendId) => addFriend.mutate(friendId)}
-                            onRemoveFriend={(friendId) => removeFriend.mutate(friendId)}
+                            onRemoveFriend={handleRemoveFriend}
+                            removingFriendId={removingFriendId}
                         />
                     </TabsContent>
                     <TabsContent value="notifications">

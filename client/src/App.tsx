@@ -19,6 +19,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicyPage/PrivacyPolicy"
 import FindPages from "./pages/FindPagesPage/FindPages"
 import Profile from "./pages/ProfilePage/ProfilePage"
 import NotFound from "./pages/NotFound"
+import AnimateHeadIcon from "./animations/AnimateHeadIcon"
 
 
 function App() {
@@ -108,26 +109,29 @@ function App() {
   };
 
   return (
-    <div className="overflow-x-hidden text-neutral-300 selection:bg-cyan-300 selection:text-cyan-900 bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] min-h-screen">
-      <div className='container mx-auto px-8'>
-        <NavBar currentUser={currentUser} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/signin" element={<Login/>} />
-          <Route path="/confirm-email/token/:token/username/:username" element={<ConfirmEmail/>} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/update-password/token/:token/email/:email" element={<UpdatePassword />} />
-          <Route path="/guide" element={<Guide />} />
-          <Route path="/profile/:userId" element={<Profile currentUser={currentUser} />} />
-          <Route path="/livechat" element={<LiveChat currentUser={currentUser} />} />
-          <Route path="/findpages" element={<FindPages />} />
-          <Route path="/privacy" element={<PrivacyPolicy/>} />
-          <Route path="*" element={<NotFound />} /> {}
-        </Routes>
+    <>
+      <AnimateHeadIcon/>
+      <div className="overflow-x-hidden text-neutral-300 selection:bg-cyan-300 selection:text-cyan-900 bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))] min-h-screen">
+        <div className='container mx-auto px-8'>
+          <NavBar currentUser={currentUser} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/signin" element={<Login/>} />
+            <Route path="/confirm-email/token/:token/username/:username" element={<ConfirmEmail/>} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/update-password/token/:token/email/:email" element={<UpdatePassword />} />
+            <Route path="/guide" element={<Guide />} />
+            <Route path="/profile/:userId" element={<Profile currentUser={currentUser} />} />
+            <Route path="/livechat" element={<LiveChat currentUser={currentUser} />} />
+            <Route path="/findpages" element={<FindPages />} />
+            <Route path="/privacy" element={<PrivacyPolicy/>} />
+            <Route path="*" element={<NotFound />} /> {}
+          </Routes>
+        </div>
+        <Footer/>
       </div>
-      <Footer/>
-    </div>
+    </>
   )
 }
 

@@ -29,13 +29,15 @@ type FriendListProps = {
 export default function FriendList({ friends, isLoading, onFriendSelect, selectedFriendId }: FriendListProps) {
     if (isLoading) {
         return (
-            <ScrollArea className="h-[calc(100vh-140px)]">
+            <ScrollArea className="h-[calc(100vh-140px)] ">
                 {[...Array(5)].map((_, index) => (
-                    <div key={index} className="flex items-center p-4">
-                        <Skeleton className="h-10 w-10 rounded-full" />
-                        <div className="ml-4 space-y-2">
-                            <Skeleton className="h-4 w-[200px]" />
-                            <Skeleton className="h-4 w-[150px]" />
+                    <div key={index} className="flex w-full items-center  justify-between p-4 border-b border-gray-800">
+                        <div className="flex items-center">
+                            <Skeleton className="h-10 w-10 rounded-full  bg-gray-700" />
+                            <div className="ml-4 space-y-2">
+                                <Skeleton className="h-4 w-[200px] rounded-xl bg-gray-700" />
+                                <Skeleton className="h-4 w-[150px] rounded-xl bg-gray-700" />
+                            </div>
                         </div>
                     </div>
                 ))}

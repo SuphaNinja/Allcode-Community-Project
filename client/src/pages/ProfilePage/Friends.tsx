@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
-import { UserPlus, UserMinus } from "lucide-react"
+import { UserPlus, UserMinus, Loader2 } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 
@@ -20,11 +20,12 @@ interface FriendsProps {
     isOwnProfile: boolean;
     totalFriends: number;
     onAddFriend: (friendId: string) => void;
-    onRemoveFriend: (friendId: string) => void;
+    onRemoveFriend: (friendId: string) => Promise<void>;
     currentUserId: string;
+    removingFriendId: string | null;
 }
 
-export default function Friends({ friends, isOwnProfile, totalFriends, onAddFriend, onRemoveFriend, currentUserId }: FriendsProps) {
+export default function Friends({ friends, isOwnProfile, totalFriends, onAddFriend, onRemoveFriend, currentUserId, removingFriendId }: FriendsProps) {
     return (
         <Card className="shadow-lg rounded-2xl border-neutral-800">
             <CardHeader className="pb-4">
@@ -64,9 +65,16 @@ export default function Friends({ friends, isOwnProfile, totalFriends, onAddFrie
                                                     size="sm"
                                                     onClick={() => onRemoveFriend(friend.id)}
                                                     className="ml-auto"
+                                                    disabled={removingFriendId === friend.id}
                                                 >
-                                                    <UserMinus className="h-4 w-4 mr-2" />
-                                                    Unfriend
+                                                    {removingFriendId === friend.id ? (
+                                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                                    ) : (
+                                                        <>
+                                                            <UserMinus className="h-4 w-4 mr-2" />
+                                                            Unfriend
+                                                        </>
+                                                    )}
                                                 </Button>
                                             ) : (
                                                 <Button
@@ -86,9 +94,16 @@ export default function Friends({ friends, isOwnProfile, totalFriends, onAddFrie
                                                 size="sm"
                                                 onClick={() => onRemoveFriend(friend.id)}
                                                 className="ml-auto"
+                                                disabled={removingFriendId === friend.id}
                                             >
-                                                <UserMinus className="h-4 w-4 mr-2" />
-                                                Unfriend
+                                                {removingFriendId === friend.id ? (
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                ) : (
+                                                    <>
+                                                        <UserMinus className="h-4 w-4 mr-2" />
+                                                        Unfriend
+                                                    </>
+                                                )}
                                             </Button>
                                         )}
                                     </>

@@ -25,17 +25,16 @@ type SearchUsersProps = {
 export default function SearchUsers({ users, isLoading, addFriend, friends }: SearchUsersProps) {
     if (isLoading) {
         return (
-            <ScrollArea className="h-[calc(100vh-140px)]">
+            <ScrollArea className="h-[calc(100vh-140px)] ">
                 {[...Array(5)].map((_, index) => (
-                    <div key={index} className="flex w-full items-center justify-between p-4">
+                    <div key={index} className="flex w-full items-center  justify-between p-4 border-b border-gray-800">
                         <div className="flex items-center">
-                            <Skeleton className="h-10 w-10 rounded-full" />
+                            <Skeleton className="h-10 w-10 rounded-full  bg-gray-700" />
                             <div className="ml-4 space-y-2">
-                                <Skeleton className="h-4 w-[200px]" />
-                                <Skeleton className="h-4 w-[150px]" />
+                                <Skeleton className="h-4 w-[200px] rounded-xl bg-gray-700" />
+                                <Skeleton className="h-4 w-[150px] rounded-xl bg-gray-700" />
                             </div>
                         </div>
-                        <Skeleton className="h-9 w-[100px]" />
                     </div>
                 ))}
             </ScrollArea>

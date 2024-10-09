@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Link } from 'react-router-dom'
 import MessageItem from './MessageItem'
+import { Skeleton } from '@/components/ui/skeleton'
 
 type User = {
     id: string
@@ -228,9 +229,26 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
             </div>
             <ScrollArea className="h-full p-4" ref={scrollAreaRef}>
                 {isLoading && pageNumber === 1 ? (
+                    <>
                     <div className="flex items-center justify-center h-full">
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
                     </div>
+                        {[...Array(10)].map((_, index) => (
+                            <div
+                                key={index}
+                                className={`flex w-full items-center p-4 border-b border-gray-800 ${index % 2 === 0 ? 'justify-start' : 'justify-end'
+                                    }`}
+                            >
+                                <div className={`flex items-center ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}>
+                                    <Skeleton className="h-10 w-10 rounded-full bg-gray-700" />
+                                    <div className={`space-y-2 ${index % 2 === 0 ? 'ml-4' : 'mr-4'}`}>
+                                        <Skeleton className="h-4 w-[200px] rounded-xl bg-gray-700" />
+                                        <Skeleton className="h-4 w-[150px] rounded-xl bg-gray-700" />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                        </>
                 ) : (
                     <>
                         {initialMessages?.data.success.hasMore && (
