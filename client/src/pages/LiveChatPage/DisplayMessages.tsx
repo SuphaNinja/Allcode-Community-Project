@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axiosInstance from '@/lib/axiosInstance'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -39,6 +39,7 @@ type Message = {
     receiverId: string
     read: boolean
     createdAt: string
+    updatedAt: string
 }
 
 type DisplayMessagesProps = {
@@ -60,8 +61,23 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
     
     const { data: initialMessages, isLoading } = useQuery({
         queryKey: ['messages', friend.id, pageNumber],
-        queryFn: () => axiosInstance.post('/api/users/get-messages', { friendId: friend.id, pageNumber }),
-    })
+        queryFn: () => axiosInstance.post('/api/users/get-messages', { friendId: friend.id, pageNumber })
+    });
+
+    useEffect(() => {
+        if (initialMessages?.data?.success) {
+            setMessages(initialMessages.data.success.messages)
+            markMessagesAsRead.mutate(friend.id)
+        }
+    }, [initialMessages, friend.id]);
+
+    const handleLoadMore = () => {
+        setIsScrollLocked(true)
+        setPageNumber(prevPageNumber => prevPageNumber + 1)
+        setTimeout(() => {
+            setIsScrollLocked(false)
+        }, 1000)
+    };
 
     const markMessagesAsRead = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post('/api/users/read-message', { friendId }),
@@ -103,14 +119,11 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
     const handleRemoveFriend = () => {
         removeFriend.mutate(friend.id)
         window.location.reload()
-    }
+    };
 
     const toggleCloseFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/toggle-close-friend", { friendId }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['friends'] })
-            
-        },
+        onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['friends'] }) },
         onError: () => {
             toast({
                 title: "Error",
@@ -123,53 +136,17 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
     const handleToggleCloseFriend = () => {
         toggleCloseFriend.mutate(friend.id)
         setIsCloseFriend(!isCloseFriend)
-    }
-
-    useEffect(() => {
-        if (initialMessages?.data?.success) {
-            setMessages(initialMessages.data.success.messages)
-            markMessagesAsRead.mutate(friend.id)
-        }
-    }, [initialMessages, friend.id])
-
-    useEffect(() => {
-        socket.on('new_message', (message: Message) => {
-            console.log("new message has been recieved",message) 
-            if (message.senderId === friend.id || message.senderId === currentUser.id) {
-                setMessages(prevMessages => [...prevMessages, message])
-                console.log(messages)
-                if (message.senderId === friend.id) {
-                    markMessagesAsRead.mutate(friend.id)
-                }
-            }
-        })
-
-        return () => {
-            socket.off('new_message')
-        }
-    }, [currentUser.id, friend.id]);
-
-    const handleLoadMore = () => {
-        setIsScrollLocked(true)
-        setPageNumber(prevPageNumber => prevPageNumber + 1)
-        setTimeout(() => {
-            setIsScrollLocked(false)
-        }, 1000)
-    }
+    };
 
     useEffect(() => {
         if (!isScrollLocked) {
             lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' })
         }
-    }, [messages])
+    }, [messages]);
+
 
     const sendMessage = useMutation({
         mutationFn: (content: string) => axiosInstance.post(`/api/users/send-message`, { receiverId: friend.id, content }),
-        onSuccess: (data) => {
-            const newMessage = data.data.success
-            setMessages(prevMessages => [...prevMessages, newMessage])
-            setNewMessage("")
-        },
         onError: () => {
             toast({
                 title: "Error",
@@ -177,18 +154,41 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                 variant: "destructive",
             })
         },
-    })
+    });
 
     const handleSendMessage = (e: React.FormEvent) => {
         e.preventDefault()
-        console.log(newMessage.trim())
+        const message: Message = {
+            id: Date.now().toString(),
+            content: newMessage,
+            senderId: currentUser.id,
+            receiverId: friend.id,
+            read: false,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
         if (newMessage.trim()) {
+            setMessages(prevMessages => [...prevMessages, message]);
             setNewMessage("")
             sendMessage.mutate(newMessage)
-            
-            socket.emit("send_message", newMessage)
+            socket.emit("send_message", message)
         }
     };
+
+    const handleNewMessage = useCallback((message: Message) => {
+        if (message.senderId === friend.id) {
+            setMessages(prevMessages => [...prevMessages, message]);
+            markMessagesAsRead.mutate(friend.id);
+        }
+    }, [currentUser.id, friend.id]);
+
+    useEffect(() => {
+        socket.on('new_message', handleNewMessage);
+
+        return () => {
+            socket.off('new_message', handleNewMessage);
+        };
+    }, [handleNewMessage]);
 
     return (
         <div className="flex flex-col h-full rounded-lg shadow-xl overflow-hidden sm:border border-gray-700">

@@ -1,4 +1,6 @@
 import { addUserSocket, removeUserSocket, getUserSocketId } from "./socketManager.js";
+import prisma from "../../prisma/Prisma.js";
+
 
 export function handleConnection(socket) {
     console.log("A user connected");
@@ -15,12 +17,12 @@ export function handleConnection(socket) {
     });
 }
 
-export function handleSendMessage(io, message) {
-    console.log(message);
-    const receiverSocketId = getUserSocketId(message.receiverId);
+export function handleSendMessage(io, {messageContent}) {
+    console.log(messageContent)
+    const receiverSocketId = getUserSocketId(messageContent.receiverId);
+    const senderSocketId = getUserSocketId(messageContent.senderId);
     if (receiverSocketId) {
-        io.to(receiverSocketId).emit("new_message", message);
+        io.to(receiverSocketId).emit("new_message", messageContent);
     }
-
-    io.to(message.senderSocketId).emit("new_message", message);
+    io.to(senderSocketId).emit("new_message", messageContent);
 }
