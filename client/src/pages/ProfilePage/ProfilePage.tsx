@@ -35,6 +35,7 @@ export default function Profile({ currentUser }: any) {
     const [isAddingFriend, setIsAddingFriend] = useState(false)
     const [isRemovingFriend, setIsRemovingFriend] = useState(false)
 
+
     const user = useQuery({
         queryKey: ["user", userId],
         queryFn: () => axiosInstance.post("/api/users/get-user-by-id", { userId }),

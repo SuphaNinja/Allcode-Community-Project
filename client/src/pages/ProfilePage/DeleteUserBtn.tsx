@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, Dispatch, SetStateAction } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axiosInstance from "@/lib/axiosInstance"
 import { useToast } from "@/hooks/use-toast"
@@ -9,7 +9,11 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { cn } from "@/lib/utils"
 import { useNavigate } from "react-router-dom"
 
-export default function DeleteUserButton() {
+interface DeleteUserButtonProps {
+    setIsDeletingAccount: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function DeleteUserButton({ setIsDeletingAccount }: DeleteUserButtonProps) {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false)
     const [password, setPassword] = useState("")
@@ -18,6 +22,7 @@ export default function DeleteUserButton() {
 
     const deleteUser = useMutation({
         mutationFn: (password: string) => axiosInstance.post("/api/users/delete-user", { password }),
+        onMutate: () => setIsDeletingAccount(true),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["currentUser"] })
             toast({
@@ -34,6 +39,7 @@ export default function DeleteUserButton() {
                 description: `${error.response.data.error}`,
             })
         },
+        onSettled: () => setIsDeletingAccount(false)
     })
 
     const handleDelete = () => {

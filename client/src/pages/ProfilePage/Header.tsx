@@ -46,10 +46,11 @@ export default function Header({
     onToggleCloseFriend,
     isTogglingCloseFriend,
     isRemovingFriend,
-    isAddingFriend
+    isAddingFriend,
 }: ProfileHeaderProps) {
     const [imageLoaded, setImageLoaded] = useState(false)
     const { toast } = useToast()
+    const [isDeletingAccount, setIsDeletingAccount] = useState(false)
 
     useEffect(() => {
         if (userData.profileImage) {
@@ -209,7 +210,11 @@ export default function Header({
                             </div>
                         ) : (
                             <div className="flex sm:flex-row flex-col items-center justify-center md:h-48 space-y-2">
-                                <DeleteUserButton />
+                                {isDeletingAccount ? (
+                                    <Loader2 className='animate-spin'/>
+                                ): (
+                                    <DeleteUserButton setIsDeletingAccount={setIsDeletingAccount} />
+                                )}
                             </div>
                         )}
                     </div>
