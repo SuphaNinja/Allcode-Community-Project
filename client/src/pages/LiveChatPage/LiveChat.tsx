@@ -14,10 +14,6 @@ type User = {
     profileImage?: string
 }
 
-type LiveChatProps = {
-    currentUser:  User
-}
-
 export default function LiveChat({ currentUser }: any) {
     const [selectedFriend, setSelectedFriend] = useState<User | null>(null)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
