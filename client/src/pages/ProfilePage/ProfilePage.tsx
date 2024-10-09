@@ -150,6 +150,7 @@ export default function Profile({ currentUser }: any) {
     }
 
     const userData = user.data?.data.success
+    if (user.isLoading || !userData) { return <ProfileSkeleton /> }
     const isOwnProfile = currentUser.data.data.success.id === userData.id
     const isFriend = userData.friends.some((friend: any) => friend.id === currentUser.data.data.success.id)
 
@@ -164,7 +165,6 @@ export default function Profile({ currentUser }: any) {
         ...friend,
         isFriend: true
     }));
-    if (user.isLoading || !userData) { return <ProfileSkeleton /> }
 
     return (
         <motion.div 
