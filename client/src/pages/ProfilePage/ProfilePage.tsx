@@ -136,8 +136,6 @@ export default function Profile({ currentUser }: any) {
         )
     };
 
-    
-
     if (user.isError) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-background">
@@ -166,7 +164,7 @@ export default function Profile({ currentUser }: any) {
         ...friend,
         isFriend: true
     }));
-    if (user.isLoading) { return <ProfileSkeleton /> }
+    if (user.isLoading || !userData) { return <ProfileSkeleton /> }
 
     return (
         <motion.div 
