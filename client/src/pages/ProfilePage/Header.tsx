@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CalendarIcon, MailIcon, UsersIcon, UserPlusIcon, UserMinusIcon, Star, CheckCircle, XCircle } from 'lucide-react'
+import { CalendarIcon, MailIcon, UsersIcon, UserPlusIcon, UserMinusIcon, Star, CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import DeleteUserButton from './DeleteUserBtn'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -31,6 +31,9 @@ interface ProfileHeaderProps {
     onAddFriend: () => void;
     onRemoveFriend: () => void;
     onToggleCloseFriend: () => void;
+    isTogglingCloseFriend: boolean
+    isAddingFriend: boolean
+    isRemovingFriend: boolean
 }
 
 export default function Header({
@@ -40,7 +43,10 @@ export default function Header({
     isCloseFriend,
     onAddFriend,
     onRemoveFriend,
-    onToggleCloseFriend
+    onToggleCloseFriend,
+    isTogglingCloseFriend,
+    isRemovingFriend,
+    isAddingFriend
 }: ProfileHeaderProps) {
     const [imageLoaded, setImageLoaded] = useState(false)
     const { toast } = useToast()
@@ -168,22 +174,36 @@ export default function Header({
                                         <>
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
-                                                    <Button variant="ghost" onClick={onToggleCloseFriend} className="w-full md:w-auto" aria-label={isCloseFriend ? "Remove from close friends" : "Add to close friends"}>
-                                                        <Star className={`h-7 w-7 ${isCloseFriend ? 'text-yellow-500 fill-current' : ''}`} />
-                                                    </Button>
+                                                    {isTogglingCloseFriend ? (
+                                                        <Loader2/>
+                                                        ):(
+                                                        <Button variant = "ghost" onClick = { onToggleCloseFriend } className = "w-full md:w-auto" aria-label={isCloseFriend ? "Remove from close friends" : "Add to close friends"}>
+                                                            <Star className={`h-7 w-7 ${isCloseFriend ? 'text-yellow-500 fill-current' : ''}`} />
+                                                        </Button>
+                                                    )}
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     {isCloseFriend ? "Remove from close friends" : "Add to close friends"}
                                                 </TooltipContent>
                                             </Tooltip>
-                                            <Button variant="ghost" onClick={onRemoveFriend} className="w-full md:w-auto">
-                                                <UserMinusIcon className="mr-2 h-5 w-5" /> Remove Friend
-                                            </Button>
+                                            {isRemovingFriend ? (
+                                                <Loader2/>
+                                            ) : (
+                                                <Button variant = "ghost" onClick = { onRemoveFriend } className = "w-full md:w-auto">
+                                                    <UserMinusIcon className = "mr-2 h-5 w-5" /> Remove Friend
+                                                </Button>
+                                            )}
                                         </>
                                     ) : (
-                                        <Button onClick={onAddFriend} className="w-full md:w-auto">
-                                            <UserPlusIcon className="mr-2 h-5 w-5" /> Add Friend
-                                        </Button>
+                                    <>
+                                        {isAddingFriend ? (
+                                            <Loader2/>
+                                        ):(
+                                            <Button onClick={onAddFriend} className="w-full md:w-auto">
+                                                <UserPlusIcon className="mr-2 h-5 w-5" /> Add Friend
+                                            </Button>
+                                        )}
+                                    </>
                                     )}
                                 </TooltipProvider>
                             </div>

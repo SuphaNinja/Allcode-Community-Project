@@ -31,6 +31,9 @@ export default function Profile({ currentUser }: any) {
     const queryClient = useQueryClient()
     const [isCloseFriend, setIsCloseFriend] = useState(false)
     const [removingFriendId, setRemovingFriendId] = useState<string | null>(null)
+    const [isTogglingCloseFriend, setIsTogglingCloseFriend] = useState(false)
+    const [isAddingFriend, setIsAddingFriend] = useState(false)
+    const [isRemovingFriend, setIsRemovingFriend] = useState(false)
 
     const user = useQuery({
         queryKey: ["user", userId],
@@ -48,6 +51,7 @@ export default function Profile({ currentUser }: any) {
 
     const addFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/add-friend", { friendId }),
+        onMutate: () => setIsAddingFriend(true),
         onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['user', userId] }) },
         onError: () => {
             toast({
@@ -56,12 +60,14 @@ export default function Profile({ currentUser }: any) {
                 variant: "destructive",
             })
         },
+        onSettled: () => setIsAddingFriend(false)
     });
 
     const removeFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post(`/api/users/remove-friend`, { friendId }),
         onMutate: (friendId) => {
             setRemovingFriendId(friendId)
+            setIsRemovingFriend(true)
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['user', userId] })
@@ -76,6 +82,7 @@ export default function Profile({ currentUser }: any) {
         },
         onSettled: () => {
             setRemovingFriendId(null)
+            setIsRemovingFriend(false)
         },
     });
 
@@ -85,6 +92,7 @@ export default function Profile({ currentUser }: any) {
 
     const toggleCloseFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/toggle-close-friend", { friendId }),
+        onMutate: () => setIsTogglingCloseFriend(true),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['user', userId] })
             setIsCloseFriend(data.data.success.isCloseFriend)
@@ -96,6 +104,7 @@ export default function Profile({ currentUser }: any) {
                 variant: "destructive",
             })
         },
+        onSettled: () => setIsTogglingCloseFriend(false)
     })
 
     const noti = useQuery({
@@ -188,6 +197,9 @@ export default function Profile({ currentUser }: any) {
                     onAddFriend={() => addFriend.mutate(userData.id)}
                     onRemoveFriend={() => removeFriend.mutate(userData.id)}
                     onToggleCloseFriend={handleToggleCloseFriend}
+                    isTogglingCloseFriend={isTogglingCloseFriend}
+                    isAddingFriend={isAddingFriend}
+                    isRemovingFriend={isRemovingFriend}
                 />
 
                 <Tabs defaultValue="creations" className="w-full">
