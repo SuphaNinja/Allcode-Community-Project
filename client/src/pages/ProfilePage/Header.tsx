@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CalendarIcon, MailIcon, UsersIcon, UserPlusIcon, UserMinusIcon, Star, CheckCircle, XCircle, Loader2, Loader } from 'lucide-react'
+import { CalendarIcon, MailIcon, UsersIcon, UserPlusIcon, UserMinusIcon, Star, CheckCircle, XCircle, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import DeleteUserButton from './DeleteUserBtn'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
