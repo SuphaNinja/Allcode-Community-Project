@@ -15,16 +15,10 @@ type User = {
 }
 
 type LiveChatProps = {
-    currentUser: {
-        data: {
-            data: {
-                success: User
-            }
-        }
-    }
+    currentUser:  User
 }
 
-export default function LiveChat({ currentUser }: LiveChatProps) {
+export default function LiveChat({ currentUser }: any) {
     const [selectedFriend, setSelectedFriend] = useState<User | null>(null)
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
