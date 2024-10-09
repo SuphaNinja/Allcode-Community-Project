@@ -17,7 +17,7 @@ export default function AnimateHeadIcon() {
     let currentIndex = 0
 
     const changeFavicon = () => {
-      const link = document.querySelector("link[rel~='icon']")
+      const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement | null
       if (!link) {
         const newLink = document.createElement('link')
         newLink.rel = 'icon'
@@ -25,7 +25,9 @@ export default function AnimateHeadIcon() {
       }
       const svgBlob = new Blob([letters[currentIndex]], { type: 'image/svg+xml' })
       const url = URL.createObjectURL(svgBlob)
-      link.href = url
+      if (link) {
+        link.href = url
+      }
       currentIndex = (currentIndex + 1) % letters.length
 
       setTimeout(() => URL.revokeObjectURL(url), 2000)
@@ -37,7 +39,7 @@ export default function AnimateHeadIcon() {
 
     return () => {
       clearInterval(intervalId)
-      const link = document.querySelector("link[rel~='icon']")
+      const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement | null
       if (link && link.href.startsWith('blob:')) {
         URL.revokeObjectURL(link.href)
       }
