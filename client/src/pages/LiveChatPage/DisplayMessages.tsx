@@ -118,13 +118,11 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                 variant: "destructive",
             })
         },
-        onSettled: () => setIsRemovingFriend(false)
+        onSettled: () =>{ 
+            setIsRemovingFriend(false);
+            window.location.reload()
+        }
     });
-
-    const handleRemoveFriend = () => {
-        removeFriend.mutate(friend.id)
-        window.location.reload()
-    };
 
     const toggleCloseFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/toggle-close-friend", { friendId }),
@@ -236,7 +234,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel className='text-green-500 hover:text-green-300'>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction className='text-red-500 hover:text-red-300' onClick={handleRemoveFriend}>
+                                    <AlertDialogAction className='text-red-500 hover:text-red-300' onClick={() => removeFriend.mutate(friend.id)}>
                                         Yes, unfriend
                                     </AlertDialogAction>
                                 </AlertDialogFooter>
