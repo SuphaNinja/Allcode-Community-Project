@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CalendarIcon, MailIcon, UsersIcon, UserPlusIcon, UserMinusIcon, Star, CheckCircle, XCircle, Loader2 } from 'lucide-react'
+import { CalendarIcon, MailIcon, UsersIcon, UserPlusIcon, UserMinusIcon, Star, CheckCircle, XCircle, Loader2, Loader } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import DeleteUserButton from './DeleteUserBtn'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -175,7 +175,7 @@ export default function Header({
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
                                                     {isTogglingCloseFriend ? (
-                                                        <Loader2/>
+                                                        <Loader2 className='animate-spin' />
                                                         ):(
                                                         <Button variant = "ghost" onClick = { onToggleCloseFriend } className = "w-full md:w-auto" aria-label={isCloseFriend ? "Remove from close friends" : "Add to close friends"}>
                                                             <Star className={`h-7 w-7 ${isCloseFriend ? 'text-yellow-500 fill-current' : ''}`} />
@@ -187,7 +187,7 @@ export default function Header({
                                                 </TooltipContent>
                                             </Tooltip>
                                             {isRemovingFriend ? (
-                                                <Loader2/>
+                                                <Loader2 className='animate-spin' />
                                             ) : (
                                                 <Button variant = "ghost" onClick = { onRemoveFriend } className = "w-full md:w-auto">
                                                     <UserMinusIcon className = "mr-2 h-5 w-5" /> Remove Friend
@@ -197,7 +197,7 @@ export default function Header({
                                     ) : (
                                     <>
                                         {isAddingFriend ? (
-                                            <Loader2/>
+                                        <Loader2 className='animate-spin' />
                                         ):(
                                             <Button onClick={onAddFriend} className="w-full md:w-auto">
                                                 <UserPlusIcon className="mr-2 h-5 w-5" /> Add Friend

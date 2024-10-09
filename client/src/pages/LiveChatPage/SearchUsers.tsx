@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import { UserPlus } from "lucide-react"
+import { Loader2, UserPlus } from "lucide-react"
 import { UseMutationResult } from '@tanstack/react-query'
 
 type User = {
@@ -20,9 +20,10 @@ type SearchUsersProps = {
     isLoading: boolean
     addFriend: UseMutationResult<any, unknown, string, unknown>
     friends: User[] | undefined
+    isAddingFriend: boolean
 }
 
-export default function SearchUsers({ users, isLoading, addFriend, friends }: SearchUsersProps) {
+export default function SearchUsers({ users, isLoading, addFriend, friends, isAddingFriend }: SearchUsersProps) {
     if (isLoading) {
         return (
             <ScrollArea className="h-[calc(100vh-140px)] ">
@@ -62,10 +63,16 @@ export default function SearchUsers({ users, isLoading, addFriend, friends }: Se
                             </div>
                         </div>
                         {!isFriend && (
-                            <Button size="sm" onClick={handleAddFriend}>
-                                <UserPlus className="h-4 w-4 mr-2" />
-                                Add
-                            </Button>
+                            <>
+                                {isAddingFriend ? (
+                                    <Loader2 className='animate-spin'/>
+                                ): (
+                                    <Button size="sm" onClick={handleAddFriend}>
+                                        <UserPlus className="h-4 w-4 mr-2" />
+                                        Add
+                                    </Button>
+                                )}
+                            </>
                         )}
                     </div>
                 )

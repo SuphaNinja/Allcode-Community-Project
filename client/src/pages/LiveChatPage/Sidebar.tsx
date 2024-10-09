@@ -29,6 +29,7 @@ export default function Sidebar({ onFriendSelect, selectedFriendId }: SidebarPro
     const [searchQuery, setSearchQuery] = useState("")
     const { toast } = useToast();
     const queryClient = useQueryClient();
+    const [ isAddingFriend, setIsAddingFriend ] = useState(false);
 
     const { data: currentUser, isLoading: isCurrentUserLoading, isError: isCurrentUserError } = useQuery({
         queryKey: ['currentUser'],
@@ -53,6 +54,7 @@ export default function Sidebar({ onFriendSelect, selectedFriendId }: SidebarPro
 
     const addFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/add-friend", { friendId }),
+        onMutate: () => setIsAddingFriend(true),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['friends'] })
             queryClient.invalidateQueries({ queryKey: ['allUsers'] })
@@ -65,6 +67,7 @@ export default function Sidebar({ onFriendSelect, selectedFriendId }: SidebarPro
                 variant: "destructive",
             })
         },
+        onSettled: () => setIsAddingFriend(false)
     });
 
     const filteredUsers = allUsers?.data?.success?.filter((user: User) =>
@@ -123,6 +126,7 @@ export default function Sidebar({ onFriendSelect, selectedFriendId }: SidebarPro
                     isLoading={isAllUsersLoading}
                     addFriend={addFriend}
                     friends={friends?.data?.success}
+                    isAddingFriend={isAddingFriend}
                 />
             </TabsContent>
         </Tabs>

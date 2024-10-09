@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Send, Star, UserMinus, ChevronUp } from "lucide-react"
+import { Send, Star, UserMinus, ChevronUp, Loader2 } from "lucide-react"
 import { useToast } from '@/hooks/use-toast'
 import socket from '@/lib/socket'
 import { AnimatePresence } from 'framer-motion'
@@ -59,6 +59,8 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
     const [pageNumber, setPageNumber] = useState(1);
     const scrollAreaRef = useRef<HTMLDivElement>(null);
     const [isScrollLocked, setIsScrollLocked] = useState(false);
+    const [isTogglingCloseFriend, setIsTogglingCloseFriend] = useState(false);
+    const [isRemovingFriend, setIsRemovingFriend] = useState(false);
 
     const { data: initialMessages, isLoading } = useQuery({
         queryKey: ['messages', friend.id, pageNumber],
@@ -100,6 +102,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
 
     const removeFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post(`/api/users/remove-friend`, { friendId }),
+        onMutate: () => setIsRemovingFriend(true),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['friends'] })
             toast({
@@ -115,6 +118,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                 variant: "destructive",
             })
         },
+        onSettled: () => setIsRemovingFriend(false)
     });
 
     const handleRemoveFriend = () => {
@@ -124,6 +128,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
 
     const toggleCloseFriend = useMutation({
         mutationFn: (friendId: string) => axiosInstance.post("/api/users/toggle-close-friend", { friendId }),
+        onMutate: () => setIsTogglingCloseFriend(true),
         onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['friends'] }) },
         onError: () => {
             toast({
@@ -132,6 +137,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                 variant: "destructive",
             })
         },
+        onSettled: () => setIsTogglingCloseFriend(false)
     });
 
     const handleToggleCloseFriend = () => {
@@ -197,8 +203,13 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                         <button
                             onClick={handleToggleCloseFriend}
                             className="flex items-center"
+                            disabled={isTogglingCloseFriend}
                         >
-                            <Star className={`h-6 w-6 mr-2 ${isCloseFriend ? 'text-yellow-500 fill-current' : ''}`} />
+                            {isTogglingCloseFriend ? (
+                                <Loader2 className='animate-spin'/>
+                            ): (
+                                <Star className={`h-6 w-6 mr-2 ${isCloseFriend ? 'text-yellow-500 fill-current' : ''}`} />
+                            )}
                             {isCloseFriend ? <p className='hidden sm:block'>Remove Close Friend</p> : <p className='hidden sm:block'>Add Close Friend</p>}
                         </button>
                         <AlertDialog>
@@ -207,9 +218,16 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                                     size="sm"
                                     variant="destructive"
                                     className="flex items-center"
+                                    disabled={isRemovingFriend}
                                 >
-                                    <UserMinus className="h-6 w-6 mr-2 text-neutral-300" />
-                                    <p className='hidden sm:block'>Unfriend</p>
+                                    {isRemovingFriend ? (
+                                        <Loader2 className='animate-spin'/>
+                                    ): (
+                                    <>
+                                        <UserMinus className="h-6 w-6 mr-2 text-neutral-300" />
+                                        <p className='hidden sm:block'>Unfriend</p>
+                                    </>
+                                    )}
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
