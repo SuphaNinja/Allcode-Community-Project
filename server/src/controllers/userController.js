@@ -4,7 +4,7 @@ import { addHours } from 'date-fns';
 import bcrypt from 'bcrypt';
 import { sendEmailConfirmation } from "../EmailAssets/sendEmails.js"
 import jwt from "jsonwebtoken";
-import { sendNotification } from "../socketServer.js";
+import { sendNotification } from "../websocket/socketManager.js";
 
 export async function createUser(req, res) {
     const signUpData = req.body;
@@ -488,7 +488,9 @@ export async function sendMessage(req, res) {
         });
 
         res.status(201).send({ success: newMessage })
-    } catch (error) {return res.status(500).send({ error: "An error occurred while sending the message" })};
+    } catch (error) {
+        console.log(error) 
+        return res.status(500).send({ error: "An error occurred while sending the message" })};
 };
 
 export async function getMessages(req, res) {
