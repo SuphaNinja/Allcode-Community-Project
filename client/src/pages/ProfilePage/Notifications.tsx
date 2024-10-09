@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Bell, MessageSquare, UserPlus, AlertTriangle, UserCheck, UserMinus, ChevronRight, Check } from 'lucide-react'
+import { Bell, MessageSquare, UserPlus, AlertTriangle, UserCheck, UserMinus, ChevronRight, Check, Loader2 } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Link } from 'react-router-dom'
@@ -26,10 +26,14 @@ interface NotificationsProps {
 export default function Notifications({ notifications, unreadCount }: NotificationsProps) {
     const [localNotifications, setLocalNotifications] = useState(notifications)
     const queryClient = useQueryClient()
+    const [loadingNotificationId, setLoadingNotificationId] = useState<string | null>(null)
 
     const markAsReadMutation = useMutation({
         mutationFn: (notificationId: string) =>
             axiosInstance.post('/api/users/mark-notifications-as-read', { notificationId }),
+        onMutate: (notificationId) => {
+            setLoadingNotificationId(notificationId)
+        },
         onSuccess: (_, notificationId) => {
             queryClient.invalidateQueries({ queryKey: ['notifications'] })
             setLocalNotifications(prev =>
@@ -40,6 +44,9 @@ export default function Notifications({ notifications, unreadCount }: Notificati
         },
         onError: (error) => {
             console.error('Failed to mark notification as read:', error)
+        },
+        onSettled: () => {
+            setLoadingNotificationId(null)
         }
     })
 
@@ -107,6 +114,9 @@ export default function Notifications({ notifications, unreadCount }: Notificati
                                 onClick={() => markAllAsReadMutation.mutate()}
                                 disabled={markAllAsReadMutation.isPending}
                             >
+                                {markAllAsReadMutation.isPending ? (
+                                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                ) : null}
                                 Mark All as Read
                             </Button>
                         </div>
@@ -135,7 +145,9 @@ export default function Notifications({ notifications, unreadCount }: Notificati
                                                 disabled={notification.read || markAsReadMutation.isPending}
                                                 className="px-2 py-1 w-full sm:w-auto"
                                             >
-                                                {notification.read ? (
+                                                {loadingNotificationId === notification.id ? (
+                                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                                ) : notification.read ? (
                                                     <Check className="h-4 w-4 text-green-500" />
                                                 ) : (
                                                     <span className="text-xs">Mark as Read</span>
