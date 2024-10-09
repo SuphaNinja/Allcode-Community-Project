@@ -30,9 +30,10 @@ type MessageItemProps = {
     currentUser: User
     isLastMessage: boolean
     lastMessageRef: React.RefObject<HTMLDivElement>
+    key: string
 }
 
-export default function MessageItem({ message, friend, currentUser, isLastMessage, lastMessageRef }: MessageItemProps) {
+export default function MessageItem({ message, key, friend, currentUser, isLastMessage, lastMessageRef }: MessageItemProps) {
     const isFriendMessage = message.senderId === friend.id;
     return (
         <motion.div
@@ -42,6 +43,7 @@ export default function MessageItem({ message, friend, currentUser, isLastMessag
             transition={{ duration: 0.5 }}
             className={`mb-4 flex ${isFriendMessage ? 'justify-start' : 'justify-end'}`}
             ref={isLastMessage ? lastMessageRef : null}
+            key={key}
         >
             <div className={`flex items-end ${isFriendMessage ? 'flex-row' : 'flex-row-reverse'} sm:max-w-[50%]`}>
                 <Avatar className="h-8 w-8 mb-2 mx-2">
