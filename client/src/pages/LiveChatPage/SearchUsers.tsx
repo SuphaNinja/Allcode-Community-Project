@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Loader2, UserPlus } from "lucide-react"
 import { UseMutationResult } from '@tanstack/react-query'
+import { useToast } from '@/hooks/use-toast'
 
 type User = {
     id: string
@@ -24,6 +25,8 @@ type SearchUsersProps = {
 }
 
 export default function SearchUsers({ users, isLoading, addFriend, friends, isAddingFriend }: SearchUsersProps) {
+    const {toast} = useToast();
+    
     if (isLoading) {
         return (
             <ScrollArea className="h-[calc(100vh-140px)] ">
@@ -49,6 +52,7 @@ export default function SearchUsers({ users, isLoading, addFriend, friends, isAd
                 const handleAddFriend = () => {
                     setIsFriend(true)
                     addFriend.mutate(user.id)
+                    toast({ title: "Friend added", description: <p className='text-neutral-300'>You've successfully added a new friend.</p> })
                 }
                 return (
                     <div key={user.id} className="flex items-center justify-between p-4 text-neutral-300 hover:bg-accent transition-colors duration-200">

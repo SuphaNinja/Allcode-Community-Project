@@ -58,7 +58,6 @@ export default function Sidebar({ onFriendSelect, selectedFriendId }: SidebarPro
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['friends'] })
             queryClient.invalidateQueries({ queryKey: ['allUsers'] })
-            toast({ title: "Friend added", description: <p className='text-neutral-300'>You've successfully added a new friend.</p> })
         },
         onError: () => {
             toast({

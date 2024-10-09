@@ -152,19 +152,6 @@ export default function Profile({ currentUser }: any) {
     }
 
     const userData = user.data?.data.success
-    if (!userData) {
-        return (
-            <div className="min-h-screen flex items-center border-neutral-800 rounded-xl justify-center bg-background">
-                <Alert className="max-w-md">
-                    <AlertTitle>User Not Found</AlertTitle>
-                    <AlertDescription>
-                        The requested user profile could not be found.
-                    </AlertDescription>
-                </Alert>
-            </div>
-        )
-    }
-
     const isOwnProfile = currentUser.data.data.success.id === userData.id
     const isFriend = userData.friends.some((friend: any) => friend.id === currentUser.data.data.success.id)
 
