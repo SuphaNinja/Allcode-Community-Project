@@ -2,13 +2,11 @@ import { io } from "socket.io-client";
 
 const isLocal = process.env.NODE_ENV === "development";
 
-const token = localStorage.getItem("token")
-
-const socket = io(isLocal ? "http://localhost:7070" : "wss://socket.allcodecommunity.com", {
+const socket = io(isLocal ? "wss://socket.allcodecommunity.com" : "wss://socket.allcodecommunity.com", {
   withCredentials: true,
   transportOptions: ['websocket', 'polling', 'flashsocket'],
   extraHeaders: {
-    "x-access-token": token ? token : ""
+    "Access-Control-Allow-Origin": "*"
   }
 });
 
