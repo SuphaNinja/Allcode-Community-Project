@@ -8,7 +8,6 @@ const io = new Server(httpServer, {
         origin: ["https://www.allcodecommunity.com", "http://localhost:5173"],
         methods: ["GET", "POST"],
         credentials: true,
-        allowedHeaders: ["x-access-token", "*"],
     }
 });
 
