@@ -61,6 +61,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
     const [isScrollLocked, setIsScrollLocked] = useState(false);
     const [isTogglingCloseFriend, setIsTogglingCloseFriend] = useState(false);
     const [isRemovingFriend, setIsRemovingFriend] = useState(false);
+    const [isSendingMessage, setIsSendingMessage] = useState(false);
 
     const { data: initialMessages, isLoading } = useQuery({
         queryKey: ['messages', friend.id, pageNumber],
@@ -150,12 +151,14 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
             receiverId: friend.id
         };
         if (newMessage.trim()) {
+            setIsSendingMessage(true)
             setNewMessage("")
             socket.emit("send_message", message)
         }
     };
 
     const handleNewMessage = useCallback((message: Message) => {
+        setIsSendingMessage(false)
         if (message.senderId === friend.id || message.senderId === currentUser.id) {
             setMessages(prevMessages => [...prevMessages, message]);
             markMessagesAsRead.mutate(friend.id);
@@ -301,11 +304,14 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                         onChange={(e) => setNewMessage(e.target.value)}
                         className="flex-1 mr-2 border border-neutral-700 rounded-xl text-neutral-300 placeholder:text-neutral-300"
                     />
-                    <Button type="submit" size="icon" className="bg-primary hover:bg-primary/90">
-                        <Send className="h-4 w-4" />
+                    {isSendingMessage ? (
+                        <Loader2 className='animate-spin'/>
+                    ): (
+                    <Button type = "submit" size = "icon" className = "bg-primary hover:bg-primary/90">
+                        <Send className = "h-4 w-4" />
                         <span className="sr-only">Send message</span>
-
                     </Button>
+                    )}
                 </div>
             </form>
         </div>
