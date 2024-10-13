@@ -91,13 +91,6 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                 )
             )
         },
-        onError: () => {
-            toast({
-                title: "Error",
-                description: <p className='text-neutral-300'>Failed to mark messages as read.</p>,
-                variant: "destructive",
-            })
-        },
     });
 
     const removeFriend = useMutation({
@@ -163,7 +156,6 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
     };
 
     const handleNewMessage = useCallback((message: Message) => {
-        console.log(message)
         if (message.senderId === friend.id || message.senderId === currentUser.id) {
             setMessages(prevMessages => [...prevMessages, message]);
             markMessagesAsRead.mutate(friend.id);
