@@ -4,7 +4,6 @@ const isLocal = process.env.NODE_ENV === "development";
 
 const socket = io(isLocal ? "http://localhost:7070" : "wss://socket.allcodecommunity.com", {
   withCredentials: true,
-  transports: ['websocket', 'polling']
 });
 
 export default socket;
