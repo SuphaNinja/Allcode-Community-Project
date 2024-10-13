@@ -5,8 +5,9 @@ import { setupSocketEvents } from "./websocket/socketEvents.js";
 const httpServer = createServer();
 const io = new Server(httpServer, {
     cors: {
-        origin: ["https://www.allcodecommunity.com", "http://localhost:5173"], 
-        methods: ["GET", "POST"]
+        origin: ["https://www.allcodecommunity.com", "http://localhost:5173"],
+        methods: ["GET", "POST"],
+        credentials: true
     }
 });
 
