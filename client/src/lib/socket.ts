@@ -4,7 +4,7 @@ const isLocal = process.env.NODE_ENV === "development";
 
 const token = localStorage.getItem("token")
 
-const socket = io(isLocal ? "https://socket.allcodecommunity.com" : "https://socket.allcodecommunity.com", {
+const socket = io(isLocal ? "http://localhost:7070" : "wss://socket.allcodecommunity.com", {
   withCredentials: true,
   transportOptions: ['websocket', 'polling', 'flashsocket'],
   extraHeaders: {
