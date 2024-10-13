@@ -300,6 +300,7 @@ export default function DisplayMessages({ friend, currentUser, onFriendRemoved }
                     <Input
                         type="text"
                         placeholder="Type a message..."
+                        disabled={isSendingMessage}
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         className="flex-1 mr-2 border border-neutral-700 rounded-xl text-neutral-300 placeholder:text-neutral-300"
